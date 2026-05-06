@@ -7,19 +7,79 @@ body {
   height: 100vh;
 }
 
-.container {
-  background: white;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+h1 {
+  color: #d90d0d;
   text-align: center;
+  border-bottom: 2px solid #d90d0d;
+  padding-bottom: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-button {
-  padding: 10px 20px;
-  border: none;
-  background: #007bff;
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #2A7B9B;
+  background: linear-gradient(rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 50%, rgba(237, 221, 83, 1) 100%);
+
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Space between the rows */
+  max-width: 900px;
+  margin: 0 auto; /* Centers the whole page */
+  padding: 20px;
+}
+
+/* Navigation: Horizontal layout */
+#navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: center; 
+  padding: 15px;
+}
+
+#navigation ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  background-color: #333333;
+  display: flex;
+}
+
+#navigation ul li a {
+  display: block;
   color: white;
-  border-radius: 8px;
-  cursor: pointer;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+#navigation ul li a:hover {
+  background-color: #111111;
+}
+
+#content-container {
+  display: grid;
+  gap: 20px; /* Space between the two rows */
+}
+
+#welcome-box h2 {
+  margin-bottom: 10px;
+  text-align: center;
+
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Creates two equal columns */
+  gap: 20px; /* Space between the two boxes */
+}
+
+.box {
+  border: 2px dashed #333;
+  padding: 20px;
 }
