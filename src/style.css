@@ -1,3 +1,9 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   font-family: Arial, sans-serif;
   background: #f4f6f8;
@@ -5,6 +11,7 @@ body {
   margin: 0;
   padding: 0;
   justify-content: flex-start;
+  width: 100%;
 }
 
 h1 {
@@ -23,14 +30,14 @@ body, html {
 }
 
 .main-container {
+  width: 100%;
+  max-width: 1600px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  overflow: auto;
+  justify-content: flex-start;
   gap: 20px; 
-  margin: 0;
+  margin: 0 auto;
   padding: 20px;
 }
 
@@ -63,9 +70,12 @@ body, html {
 }
 
 #content-container {
-  display: grid;
-  gap: 20px; /* Space between the two rows */
-  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 #welcome-box h2 {
@@ -94,23 +104,41 @@ body, html {
 
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-auto-rows: 300px;
   gap: 15px;
+  padding: 15px;
+  width: 100%;
+  grid-auto-flow: dense;
+  justify-content: center;
+  align-items: center;
+}
+
+.gallery-frame {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+
+}
+
+.frame-portrait {
+  grid-row: span 1;
+  grid-column: span 1;
+}
+
+.frame-landscape {
+  grid-row: span 1;
+  grid-column: span 2;
 }
 
 .gallery-item {
   width: 100%;
-  height: auto;
-  border-radius: 8px;
-  object-fit: cover;
+  height: 100%;
+  object-fit: contain;
   cursor: pointer;
-  transition: transform 0.3s ease;
-  display: block ;
 }
 
-.gallery-item:hover {
-  transform: scale(1.02);
-}
 
 .modal {
   display: none; 

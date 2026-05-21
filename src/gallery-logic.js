@@ -1,35 +1,80 @@
 let allImagePaths = [];
 let currentImageIndex = 0;
+const API_URL = 'http://localhost:3000';
 
-export function loadGallery() {
+export function initGallery() {
     const container = document.querySelector('.gallery-grid');
-    if (!container) {
-        console.error('Gallery container not found');
+    const uploadForm = document.getElementById('upload-form');
+    if (!container || !uploadForm) {
+        console.error('Gallery container or upload form not found');
         return;
     }
 
-    // Import images
-    const images = import.meta.glob('/src/assets/gallery/*.{png,jpg,jpeg,SVG,webp}', { eager: true });
+    fetchImages(container);
 
-    // Reset path array
-    allImagePaths = Object.values(images).map(image => image.default);
+    if(uploadForm) {
+        uploadForm.onsubmit = async (event) => {
+            event.preventDefault();
+            const fileInput = document.getElementById('file-input');
+            if(!fileInput.files[0]) return;
+            
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
 
-    // Loop through images and create elements
-    allImagePaths.forEach((imgPath, index) => {
-        const imgElement = document.createElement('img');
-        imgElement.src = imgPath;
-        imgElement.alt = `Gallery image ${index + 1}`;
-        imgElement.classList.add('gallery-item');
-        imgElement.loading = 'lazy';
+            try {
+                const response = await fetch(`${API_URL}/api/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                if(response.ok) {
+                    alert('Image uploaded successfully!');
+                    fileInput.value = '';
+                    fetchImages(container);
+                }
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                alert('An error occurred while uploading the image');
+            }
+        }
+    }
+}
 
-        imgElement.addEventListener('click', () => {
-            openModal(index);
+async function fetchImages(container) {
+    try {
+        const res = await fetch(`${API_URL}/api/images`);
+        allImagePaths = await res.json();
+
+        container.innerHTML = '';
+
+        allImagePaths.forEach((imgPath, index) => {
+            const frameElement = document.createElement('div');
+            frameElement.className = 'gallery-frame';
+            
+            const imgElement = document.createElement('img');
+            imgElement.src = imgPath;
+            imgElement.alt = `Gallery image ${index + 1}`;
+            imgElement.className = 'gallery-item';
+            imgElement.loading = 'lazy';
+            imgElement.onclick = () => openModal(index);
+
+            const tempImage = new Image();
+            tempImage.src = imgPath;
+            tempImage.onload = () => {
+                if(tempImage.naturalWidth > tempImage.naturalHeight) {
+                    frameElement.classList.add('frame-landscape');
+                } else {
+                    frameElement.classList.add('frame-portrait');
+                }
+            };
+            
+            frameElement.appendChild(imgElement);
+            container.appendChild(frameElement);
         });
 
-        container.appendChild(imgElement);}
-    );
-
-    setupModalControls();
+        setupModalControls();
+    } catch (error) {
+        console.error('Error fetching images:', error);
+    }
 }
 
 function openModal(index) {
