@@ -9,7 +9,7 @@ frontend:
     depends_on:
       - backend
 
-  backend:
+backend:
     image: node:18-alpine
     working_dir: /app
     command: sh -c "npm install && node server.js"
@@ -17,8 +17,10 @@ frontend:
       - "3000:3000"
     volumes:
       - ./backend:/app
-      - gallery-photos:/app/uploads # This keeps photos safe on the server host
+      - gallery-photos:/app/uploads
     restart: always
 
 volumes:
-  gallery-photos: # Declares the persistent volume
+  - ./backend:/app
+  - gallery-photos:/app/uploads
+  - ./backend/trips.db:/app/trips.db

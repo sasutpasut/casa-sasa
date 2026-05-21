@@ -14,11 +14,50 @@
         <script type="module" src="/src/main.js"></script>
       </nav>
       <div id="content-container">
-        <section class="features-grid"> 
+        <div class="trips-container"> 
           <section class="box">
             <h3>Trips</h3>
           </section>
-        </section>
+        </div>
+        <div class="form-container">
+          <h3>Add a new trip</h3>
+          <form id="add-trip-form" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="trip-name">Trip Name:</label>
+              <input type="text" id="trip-name" name="trip-name" required />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="trip-length">Length (km):</label>
+                <input type="number" step="0.1" id="trip-length" name="trip-length" required />
+              </div>
+              <div class="form-group">
+                <label for="trip-elevation">Elevation (m):</label>
+                <input type="number" id="trip-elevation" name="trip-elevation" required />
+              </div>
+              <div class="form-group">
+                <label for="trip-difficulty">Difficulty:</label>
+                <select id="trip-difficulty" name="trip-difficulty" required>
+                  <option value="easy">Easy</option>
+                  <option value="medium">Medium</option>
+                  <option value="hard">Hard</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="trip-description">Description:</label>
+                <textarea id="trip-description" rows="6" required></textarea>
+              </div>
+              <div class="form-group">
+                <label for="trip-photos">Trip Photos (up to 10):</label>
+                <input type="file" id="trip-photos" name="trip-photos" accept="image/*" multiple />
+              </div>
+            </div>
+
+            <button type="submit" class="btn-submit">Add Trip</button>
+          </form>
+
+        </div>
       </div>
     </div>
   </body>
