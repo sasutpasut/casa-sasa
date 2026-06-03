@@ -90,12 +90,6 @@ body, html {
   gap: 20px; /* Space between the two boxes */
 }
 
-.trips-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* Creates two equal columns */
-  gap: 20px; /* Space between the two boxes */
-}
-
 .form-container {
   width: 100%;
   max-width: 700px;
@@ -158,6 +152,104 @@ body, html {
   transition: background-color 0.2s;
 }
 
+#trips-container {
+ /* display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); */
+  column-width: 360px;
+  column-gap: 20px;
+  column-count: 3;
+  width: 100%;
+  margin-top: 20px auto 0 auto;
+  max-width: 1200px;
+}
+
+.trip-card {
+  break-inside: avoid;
+/*  display: inline-block;
+  flex-direction: column; */
+  background-color: #ffffff;
+  border: 2px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.trip-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.trip-info h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.trip-author {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: -4px;
+  margin-bottom: 12px;
+}
+
+.trip-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: #1f262e;
+  align-items: center;
+  margin: 4px 0;
+}
+
+.trip-description {
+  line-height: 1.5;
+
+/*  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden; */
+}
+
+.btn-map {
+  margin-top: auto;          /* Pushes button to the absolute bottom of the card */
+  align-self: flex-start;    /* Prevents button from stretching full-width */
+  background-color: #f1f5f9;
+  color: #0f172a;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  transition: background-color 0.2s;
+}
+
+.trip-cover {
+  height: 200px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-top: 12px;
+}
+
+.btn-map {
+  display: inline-block;
+  background-color: #10b981; /* Emerald green accent */
+  color: white;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 15px;
+  transition: background-color 0.2s;
+  text-align: center;
+} 
+
 .btn-submit:hover {
   background-color: #5a0505;
 }
@@ -174,7 +266,7 @@ body, html {
   color: white;
 }
 
-.badge-moderate {
+.badge-medium {
   background-color: #ff9800;
   color: white;
 }
@@ -183,7 +275,6 @@ body, html {
   background-color: #f44336;
   color: white;
 }
-
 
 .box {
   border: 2px dashed #333;
@@ -293,4 +384,10 @@ body, html {
 .prev-modal:hover, .next-modal:hover {
   color: #bbb;
   border-radius: 3px;
+}
+
+@media (max-width: 600px) {
+  #trips-container {
+    column-count: 1;
+  }
 }

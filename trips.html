@@ -14,7 +14,7 @@
         <script type="module" src="/src/main.js"></script>
       </nav>
       <div id="content-container">
-        <div class="trips-container"> 
+        <div id="trips-container"> 
           <section class="box">
             <h3>Trips</h3>
           </section>
@@ -26,7 +26,14 @@
               <label for="trip-name">Trip Name:</label>
               <input type="text" id="trip-name" name="trip-name" required />
             </div>
-
+            <div class="form-group">
+              <label for="trip-author">Author:</label>
+              <input type="text" id="trip-author" name="trip-author" required />
+            </div>
+            <div class="form-group">
+              <label for="trip-map-url">URL to route:</label>
+              <input type="text" id="trip-map-url" name="trip-map-url" placeholder="e.g., https://mapy.cz/s/..." required />
+            </div>
             <div class="form-row">
               <div class="form-group">
                 <label for="trip-length">Length (km):</label>
@@ -44,16 +51,15 @@
                   <option value="hard">Hard</option>
                 </select>
               </div>
-              <div class="form-group">
-                <label for="trip-description">Description:</label>
-                <textarea id="trip-description" rows="6" required></textarea>
-              </div>
-              <div class="form-group">
-                <label for="trip-photos">Trip Photos (up to 10):</label>
-                <input type="file" id="trip-photos" name="trip-photos" accept="image/*" multiple />
-              </div>
             </div>
-
+            <div class="form-group">
+              <label for="trip-description">Description:</label>
+              <textarea id="trip-description" rows="6" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="trip-photos">Trip Photos (up to 10):</label>
+              <input type="file" id="trip-photos" name="trip-photos" accept="image/*" multiple />
+            </div>
             <button type="submit" class="btn-submit">Add Trip</button>
           </form>
 

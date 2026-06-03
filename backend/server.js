@@ -24,7 +24,9 @@ db.serialize(() => {
         elevation REAL,
         difficulty TEXT,
         description TEXT,
-        photos TEXT
+        photos TEXT,
+        author TEXT,
+        map_url TEXT
         )
     `,);
 });
@@ -76,7 +78,10 @@ app.get('/api/images', (req, res) => {
         if (err) {
             return res.status(500).json({ error: 'Failed to read uploads directory' });
         }
-        const imageUrls = files.map(file => `http://localhost:3000/uploads/${file}`);
+
+        // Filter out .gitkeep
+        const validImages = files.filter(file => file !== '.gitkeep');
+        const imageUrls = validImages.map(file => `http://localhost:3000/uploads/${file}`);
         res.json(imageUrls);
     });
 });
@@ -99,21 +104,17 @@ app.get('/api/trips', (req, res) => {
 
 // Add a new trip
 app.post('/api/trips', upload.array('photos', 10), (req, res) => {
-    const { name, length, elevation, difficulty, description  } = req.body;
-    
-    console.log("--- MULTER RECEIVED FILES ---");
-    console.log(req.files); 
-    console.log("-----------------------------");
+    const { name, length, elevation, difficulty, description, author, map_url } = req.body;
 
     const photoFilenames = req.files ? req.files.map(file => file.filename) : [];
     const photosJson = JSON.stringify(photoFilenames);
 
     const query = `
-        INSERT INTO trips (name, length, elevation, difficulty, description, photos)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO trips (name, length, elevation, difficulty, description, photos, author, map_url)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
-    db.run(query, [name, length, elevation, difficulty, description, photosJson], function(err) {
+    db.run(query, [name, length, elevation, difficulty, description, photosJson, author, map_url], function(err) {
         if (err) {
             return res.status(500).json({ error: err.message });
         }

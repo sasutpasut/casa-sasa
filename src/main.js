@@ -1,7 +1,7 @@
 import './style.css'
 import { renderNavigation } from './navigation.js'
 import { initGallery } from './gallery-logic.js'
-import {initTrips} from './trips-logic.js'
+import { initTrips } from './trips-logic.js'
 
 
 async function init() {
@@ -12,8 +12,10 @@ async function init() {
       initGallery();
     };
 
-    if(document.querySelector('.trips-container')) {
+    if(document.getElementById('trips-container')) {
       initTrips();
+    } else {
+        console.error('Error fetching trips container');
     }
   });
 }
