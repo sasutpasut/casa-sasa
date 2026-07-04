@@ -8,6 +8,9 @@ dist
 # Database
 backend/trips.db
 
+# Environment variables
+backend/.env
+
 # Personal instructions
 src/assets/instructions.txt
 

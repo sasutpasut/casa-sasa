@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><title>Login - Casa Sasa</title>
+  <link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+  <div class="content" style="margin-top: 100px;">
+    <div class="form-container" style="max-width: 400px;">
+      <h2>Access Control</h2>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="password">Enter Access Password:</label>
+          <input type="password" id="password" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn-submit">Unlock App</button>
+      </form>
+    </div>
+  </div>
+  <script>
+    document.getElementById('login-form').onsubmit = async (e) => {
+      e.preventDefault();
+      const password = document.getElementById('password').value;
+      const res = await fetch('http://localhost:3000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: password }),
+        credentials: 'include'
+      });
+      const data = await res.json();
+      if (data.success) {
+        window.location.href = 'trips.html'; // Redirect to workspace
+      } else {
+        alert(data.error || "Login failed.");
+      }
+    };
+  </script>
+</body>
+</html>
