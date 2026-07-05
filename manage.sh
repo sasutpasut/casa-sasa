@@ -14,6 +14,19 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+# Detect docker compose command (new vs old)
+if command -v docker &> /dev/null && docker compose version &> /dev/null; then
+    DOCKER_COMPOSE="docker compose"
+elif command -v $DOCKER_COMPOSE &> /dev/null; then
+    DOCKER_COMPOSE="$DOCKER_COMPOSE"
+else
+    echo -e "${RED}Error: Neither 'docker compose' nor '$DOCKER_COMPOSE' found!${NC}"
+    echo "Please install Docker with Compose plugin."
+    exit 1
+fi
+
+echo -e "${GREEN}Using: $DOCKER_COMPOSE${NC}"
+
 function print_help() {
     cat << EOF
 Casa Sasa Management Script
@@ -44,34 +57,34 @@ EOF
 
 function start_services() {
     echo -e "${GREEN}Starting Casa Sasa services...${NC}"
-    docker-compose up -d
+    $DOCKER_COMPOSE up -d
     echo -e "${GREEN}Services started successfully!${NC}"
     echo "Access the website at: http://localhost"
 }
 
 function stop_services() {
     echo -e "${YELLOW}Stopping Casa Sasa services...${NC}"
-    docker-compose down
+    $DOCKER_COMPOSE down
     echo -e "${GREEN}Services stopped successfully!${NC}"
 }
 
 function restart_services() {
     echo -e "${YELLOW}Restarting Casa Sasa services...${NC}"
-    docker-compose restart
+    $DOCKER_COMPOSE restart
     echo -e "${GREEN}Services restarted successfully!${NC}"
 }
 
 function view_logs() {
     echo -e "${GREEN}Viewing logs (press Ctrl+C to exit)...${NC}"
-    docker-compose logs -f --tail=100
+    $DOCKER_COMPOSE logs -f --tail=100
 }
 
 function check_status() {
     echo -e "${GREEN}Checking service status...${NC}"
-    docker-compose ps
+    $DOCKER_COMPOSE ps
     echo ""
     echo -e "${GREEN}Resource usage:${NC}"
-    docker stats --no-stream $(docker-compose ps -q)
+    docker stats --no-stream $($DOCKER_COMPOSE ps -q)
 }
 
 function backup_data() {
@@ -81,10 +94,10 @@ function backup_data() {
     echo -e "${GREEN}Creating backup in $BACKUP_DIR...${NC}"
 
     # Backup database
-    docker-compose exec -T backend cat /app/trips.db > "$BACKUP_DIR/trips.db"
+    $DOCKER_COMPOSE exec -T backend cat /app/trips.db > "$BACKUP_DIR/trips.db"
 
     # Backup uploads
-    CONTAINER_ID=$(docker-compose ps -q backend)
+    CONTAINER_ID=$($DOCKER_COMPOSE ps -q backend)
     docker cp "$CONTAINER_ID:/app/uploads" "$BACKUP_DIR/uploads"
 
     # Backup .env file
@@ -118,17 +131,17 @@ function restore_data() {
     tar -xzf "$BACKUP_FILE" -C "$TEMP_DIR"
 
     echo -e "${YELLOW}Stopping services...${NC}"
-    docker-compose stop backend
+    $DOCKER_COMPOSE stop backend
 
     # Restore database
-    CONTAINER_ID=$(docker-compose ps -q backend)
+    CONTAINER_ID=$($DOCKER_COMPOSE ps -q backend)
     docker cp "$TEMP_DIR/trips.db" "$CONTAINER_ID:/app/trips.db"
 
     # Restore uploads
     docker cp "$TEMP_DIR/uploads/." "$CONTAINER_ID:/app/uploads/"
 
     echo -e "${YELLOW}Starting services...${NC}"
-    docker-compose start backend
+    $DOCKER_COMPOSE start backend
 
     rm -rf "$TEMP_DIR"
     echo -e "${GREEN}Restore completed successfully!${NC}"
@@ -145,8 +158,8 @@ function update_app() {
     git pull origin main
 
     # Rebuild and restart
-    docker-compose down
-    docker-compose up -d --build
+    $DOCKER_COMPOSE down
+    $DOCKER_COMPOSE up -d --build
 
     echo -e "${GREEN}Update completed successfully!${NC}"
 }
@@ -173,24 +186,24 @@ function reset_password() {
     fi
 
     echo -e "${YELLOW}Restarting backend...${NC}"
-    docker-compose restart backend
+    $DOCKER_COMPOSE restart backend
     echo -e "${GREEN}Password reset complete!${NC}"
 }
 
 function open_shell() {
     echo -e "${GREEN}Opening shell in backend container...${NC}"
-    docker-compose exec backend sh
+    $DOCKER_COMPOSE exec backend sh
 }
 
 function open_db() {
     echo -e "${GREEN}Opening database CLI...${NC}"
     echo "Type .exit to close"
-    docker-compose exec backend sqlite3 /app/trips.db
+    $DOCKER_COMPOSE exec backend sqlite3 /app/trips.db
 }
 
 function clean_docker() {
     echo -e "${YELLOW}Cleaning Docker resources...${NC}"
-    docker-compose down -v --remove-orphans
+    $DOCKER_COMPOSE down -v --remove-orphans
     docker system prune -f
     echo -e "${GREEN}Cleanup completed!${NC}"
 }

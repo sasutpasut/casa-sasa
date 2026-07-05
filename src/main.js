@@ -1,3 +1,5 @@
+console.log('=== main.js LOADED ===');
+
 import './style.css'
 import { renderNavigation } from './navigation.js'
 import { initGallery } from './gallery-logic.js'
@@ -8,6 +10,7 @@ import { requireAuth } from './auth-guard.js'
 
 
 async function init() {
+  console.log('=== init() CALLED ===');
   // Check authentication first
   await requireAuth();
 
@@ -24,7 +27,10 @@ async function init() {
     };
 
     if(document.getElementById('trips-container')) {
+      console.log('=== trips-container found, calling initTrips() ===');
       initTrips();
+    } else {
+      console.log('=== trips-container NOT found ===');
     }
   };
 

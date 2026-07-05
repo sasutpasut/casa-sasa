@@ -11,27 +11,79 @@ function getDeviceId() {
     return deviceId;
 }
 
+// Ensure URL has protocol (http:// or https://)
+function ensureProtocol(url) {
+    if (!url) return '';
+    // If URL already has protocol, return as is
+    if (url.match(/^https?:\/\//i)) {
+        return url;
+    }
+    // Add https:// by default
+    return 'https://' + url;
+}
+
+// Check if trip form has any data entered
+function isFormDirty() {
+    const form = document.getElementById('add-trip-form');
+    if (!form) return false;
+
+    // Check text inputs
+    const nameInput = document.getElementById('trip-name');
+    const authorInput = document.getElementById('trip-author');
+    const mapUrlInput = document.getElementById('trip-map-url');
+    const descInput = document.getElementById('trip-description');
+    const lengthInput = document.getElementById('trip-length');
+    const elevationInput = document.getElementById('trip-elevation');
+
+    if (nameInput?.value || authorInput?.value || mapUrlInput?.value ||
+        descInput?.value || lengthInput?.value || elevationInput?.value) {
+        return true;
+    }
+
+    // Check if files are selected
+    const photoInput = document.getElementById('trip-photos');
+    if (photoInput?.files && photoInput.files.length > 0) {
+        return true;
+    }
+
+    return false;
+}
+
 let currentFilters = {
     car: 'all',
     type: 'all'
 };
 
 export async function initTrips() {
+    console.log('=== initTrips CALLED ===');
+    console.log('document.readyState:', document.readyState);
+
     if (document.readyState === 'loading') {
+        console.log('Waiting for DOMContentLoaded...');
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOMContentLoaded fired!');
             setupTripsWorkflow();
             setupBucketListWorkflow();
         });
     } else {
+        console.log('DOM already loaded, running setup now');
         setupTripsWorkflow();
         setupBucketListWorkflow();
     }
 }
 
 async function setupTripsWorkflow() {
+    console.log('=== setupTripsWorkflow STARTED ===');
+
     const container = document.getElementById('trips-container');
     const form = document.getElementById('add-trip-form');
     const addTripBtn = document.getElementById('add-trip-btn');
+
+    console.log('Elements found:', {
+        container: !!container,
+        form: !!form,
+        addTripBtn: !!addTripBtn
+    });
 
     if (!container) {
         console.error('Trips container not found');
@@ -103,12 +155,24 @@ async function setupTripsWorkflow() {
     const formModal = document.getElementById('trip-form-modal');
     if (closeFormBtn && formModal) {
         closeFormBtn.onclick = () => {
+            // Check if form has data and confirm before closing
+            if (isFormDirty()) {
+                if (!confirm(t('messages.unsavedChanges'))) {
+                    return;
+                }
+            }
             formModal.style.display = 'none';
         };
 
         // Close when clicking outside
         formModal.onclick = (e) => {
             if (e.target === formModal) {
+                // Check if form has data and confirm before closing
+                if (isFormDirty()) {
+                    if (!confirm(t('messages.unsavedChanges'))) {
+                        return;
+                    }
+                }
                 formModal.style.display = 'none';
             }
         };
@@ -116,7 +180,9 @@ async function setupTripsWorkflow() {
 
     // Bind the form handler if it exists on this page layout
     if (form) {
+        console.log('=== Attaching form submit handler ===');
         form.onsubmit = async (e) => {
+            console.log('=== FORM SUBMITTED ===');
             e.preventDefault();
 
             const formData = new FormData();
@@ -137,14 +203,17 @@ async function setupTripsWorkflow() {
             }
 
             try {
+                console.log('Submitting trip form to:', `${API_URL}/api/trips`);
                 const response = await fetch(`${API_URL}/api/trips`, {
                     method: 'POST',
                     body: formData,
                     credentials: 'include' // Sent auth token with form data
                 });
 
+                console.log('Response status:', response.status);
+
                 if (response.ok) {
-                    alert('Trip added successfully!');
+                    alert(t('messages.tripAddedSuccess'));
                     form.reset();
                     fetchAndRenderTrips(container, userRole);
                     // Close the modal
@@ -152,11 +221,13 @@ async function setupTripsWorkflow() {
                         formModal.style.display = 'none';
                     }
                 } else {
-                    alert('Failed to add trip. Please try again.');
+                    const errorData = await response.json().catch(() => ({}));
+                    console.error('Server error:', errorData);
+                    alert(`${t('messages.tripSaveFailed')}: ${errorData.error || ''}`);
                 }
             } catch (error) {
                 console.error('Error adding trip:', error);
-                alert('An error occurred while adding the trip. Please try again.');
+                alert('An error occurred while adding the trip. Please check console for details.');
             }
         };
     }
@@ -201,7 +272,7 @@ async function fetchAndRenderTrips(container, userRole) {
             }
 
             const mapButtonHtml = trip.map_url
-                ? `<a href="${trip.map_url}" target="_blank" rel="noopener noreferrer" class="btn-map">🗺️ ${t('trips.map')}</a>`
+                ? `<a href="${ensureProtocol(trip.map_url)}" target="_blank" rel="noopener noreferrer" class="btn-map">🗺️ ${t('trips.map')}</a>`
                 : '';
 
             const editButtonHtml = userRole === 'admin'
@@ -269,11 +340,14 @@ async function fetchAndRenderTrips(container, userRole) {
                 </div>
             `;
 
-            // Add click handler to open modal (but not when clicking on buttons)
+            // Add click handler to open modal (but not when clicking on buttons/links)
             card.addEventListener('click', (e) => {
-                if (!e.target.closest('.btn-map') && !e.target.closest('.btn-delete') && !e.target.closest('.btn-edit')) {
-                    openTripModal(trip);
+                // Don't open modal if clicking on links or buttons
+                if (e.target.tagName === 'A' || e.target.closest('a') ||
+                    e.target.closest('.btn-map') || e.target.closest('.btn-delete') || e.target.closest('.btn-edit')) {
+                    return;
                 }
+                openTripModal(trip);
             });
 
             container.appendChild(card);
@@ -294,7 +368,7 @@ async function fetchAndRenderTrips(container, userRole) {
             document.querySelectorAll('.btn-delete').forEach(button => {
                 button.onclick = async (e) => {
                     e.stopPropagation();
-                    if (!confirm("Are you sure you want to delete this trip permanently?")) return; // Valid: Inside inline event wrapper
+                    if (!confirm(t('messages.tripDeleteConfirm'))) return; // Valid: Inside inline event wrapper
 
                     const tripId = e.target.getAttribute('data-id');
                     try {
@@ -307,11 +381,11 @@ async function fetchAndRenderTrips(container, userRole) {
                             fetchAndRenderTrips(container, userRole);
                         } else {
                             const errData = await delRes.json();
-                            alert(errData.error || "Failed to delete trip.");
+                            alert(errData.error || t('messages.tripDeleteFailed'));
                         }
                     } catch (error) {
                         console.error("Error executing trip deletion:", error);
-                        alert("An error occurred while deleting the trip.");
+                        alert(t('messages.tripDeleteError'));
                     }
                 };
             });
@@ -342,7 +416,7 @@ async function openTripModal(trip) {
     }
 
     const mapButtonHtml = trip.map_url
-        ? `<a href="${trip.map_url}" target="_blank" rel="noopener noreferrer" class="btn-map">🗺️ View on Map</a>`
+        ? `<a href="${ensureProtocol(trip.map_url)}" target="_blank" rel="noopener noreferrer" class="btn-map">🗺️ ${t('trips.map')}</a>`
         : '';
 
     // Get device ID and check if user has rated
@@ -446,11 +520,11 @@ async function openTripModal(trip) {
                         }
                     }, 500);
                 } else {
-                    alert('Failed to save rating');
+                    alert(t('messages.ratingFailed'));
                 }
             } catch (error) {
                 console.error('Error saving rating:', error);
-                alert('Error saving rating');
+                alert(t('messages.ratingError'));
             }
         };
     });
@@ -542,7 +616,7 @@ async function openEditTripModal(trip, container, userRole) {
             });
 
             if (response.ok) {
-                alert('Trip updated successfully!');
+                alert(t('messages.tripUpdatedSuccess'));
                 form.reset();
                 delete form.dataset.editingTripId;
                 fetchAndRenderTrips(container, userRole);
@@ -555,11 +629,11 @@ async function openEditTripModal(trip, container, userRole) {
                 }
                 resetFormToCreateMode(form, container, userRole, formModal);
             } else {
-                alert('Failed to update trip. Please try again.');
+                alert(t('messages.tripUpdateFailed'));
             }
         } catch (error) {
             console.error('Error updating trip:', error);
-            alert('An error occurred while updating the trip. Please try again.');
+            alert(t('messages.tripUpdateError'));
         }
     };
 
@@ -616,6 +690,19 @@ function resetFormToCreateMode(form, container, userRole, formModal) {
 
 // ========== BUCKET LIST FUNCTIONALITY ==========
 
+// Check if bucket list form has any data entered
+function isBucketFormDirty() {
+    const nameInput = document.getElementById('bucket-name');
+    const descInput = document.getElementById('bucket-description');
+    const urlInput = document.getElementById('bucket-url');
+
+    if (nameInput?.value || descInput?.value || urlInput?.value) {
+        return true;
+    }
+
+    return false;
+}
+
 async function setupBucketListWorkflow() {
     const container = document.getElementById('bucket-list-container');
     const addBucketBtn = document.getElementById('add-bucket-btn');
@@ -667,11 +754,23 @@ async function setupBucketListWorkflow() {
     // Set up close modal handler
     if (closeBucketBtn && bucketModal) {
         closeBucketBtn.onclick = () => {
+            // Check if form has data and confirm before closing
+            if (isBucketFormDirty()) {
+                if (!confirm(t('messages.unsavedChanges'))) {
+                    return;
+                }
+            }
             bucketModal.style.display = 'none';
         };
 
         bucketModal.onclick = (e) => {
             if (e.target === bucketModal) {
+                // Check if form has data and confirm before closing
+                if (isBucketFormDirty()) {
+                    if (!confirm(t('messages.unsavedChanges'))) {
+                        return;
+                    }
+                }
                 bucketModal.style.display = 'none';
             }
         };
@@ -703,7 +802,7 @@ async function setupBucketListWorkflow() {
                 });
 
                 if (response.ok) {
-                    alert(isEditing ? 'Item updated successfully!' : 'Item added successfully!');
+                    alert(isEditing ? t('messages.itemUpdatedSuccess') : t('messages.itemAddedSuccess'));
                     bucketForm.reset();
                     delete bucketForm.dataset.editingItemId;
                     fetchAndRenderBucketList(container, userRole);
@@ -775,7 +874,7 @@ async function fetchAndRenderBucketList(container, userRole) {
 
             document.querySelectorAll('.btn-delete-bucket').forEach(button => {
                 button.onclick = async () => {
-                    if (!confirm("Are you sure you want to delete this item?")) return;
+                    if (!confirm(t('messages.itemDeleteConfirm'))) return;
 
                     const itemId = button.getAttribute('data-id');
                     try {

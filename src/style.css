@@ -462,7 +462,7 @@ body, html {
 }
 
 .trip-cover {
-  height: 130px;
+  height: 350px;
   width: 100%;
   object-fit: cover;
   border-bottom: 1px solid #c4c0b4;

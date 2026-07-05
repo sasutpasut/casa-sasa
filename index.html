@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>Casa Sasa</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
     <style>
       /* Inline critical CSS to hide content before auth check */
       body:not(.auth-verified) { opacity: 0; }
@@ -14,9 +15,8 @@
       <div class="header">
         <div class="header-actions"></div>
         <div class="header-content">
-          <a href="/index.html" style="text-decoration:none;color:inherit;">
+          <a href="/" style="text-decoration:none;color:inherit;">
             <h1>CASA SASA</h1>
-            <div data-i18n="header.subtitle" style="font-family:Georgia,serif;font-style:italic;font-size:15px;color:#bfe0cc;margin-top:8px">an apartment in the heart of the Italian Alps</div>
           </a>
         </div>
         <div class="header-actions"></div>
@@ -42,19 +42,17 @@
                 <li data-i18n="home.features.bedroom">1 bedroom, 2 sofas</li>
                 <li data-i18n="home.features.bathroom">Bathroom in progress</li>
                 <li data-i18n="home.features.kitchen">Sort of equipped kitchen</li>
-                <li data-i18n="home.features.garden">Large garden with pool (I wish!)
-                </li>
               </ul>
           </section>
           <section class="box">
             <h3 data-i18n="home.location">Location</h3>
               <ul>
-                <li><a href="https://mapy.com/s/bezujufuje" target="_blank">Moggio di Sotto, Italy</a></li>
+                <li><a href="https://mapy.com/s/cetubocuzu" target="_blank" data-i18n="home.locationLink">Moggio di Sotto, Italy</a></li>
               </ul>
           </section>
         </section>
-        <section id="main-photo"> 
-          <img src="/src/assets/gallery/moggio.jpg" alt="The city of Moggio di Sotto" class="house-image" style="width: 60%; height: auto;"/>
+        <section id="main-photo">
+          <img src="/src/assets/gallery/moggio.jpg" data-i18n-alt="home.imageAlt" alt="The city of Moggio di Sotto" class="house-image" style="width: 100%; max-width: 1200px; height: auto; margin: 0 auto; display: block;"/>
         </section>
       </div>
     </div>

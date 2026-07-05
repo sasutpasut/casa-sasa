@@ -7,7 +7,7 @@ This guide covers deploying Casa Sasa in a Docker container on a remote server.
 1. **Clone the repository** on your server
 2. **Copy environment template**: `cp .env.example backend/.env`
 3. **Edit credentials**: Update passwords and secrets in `backend/.env`
-4. **Start the application**: `docker-compose up -d`
+4. **Start the application**: `./manage.sh start` (or `docker compose up -d`)
 5. **Access the website**: Navigate to `http://your-server-ip`
 
 ## Environment Configuration
@@ -42,16 +42,26 @@ node -e "console.log(require('crypto').randomBytes(64).toString('base64'))"
 
 ### Starting the Application
 
+**Using the management script (recommended):**
+```bash
+./manage.sh start
+./manage.sh logs
+./manage.sh stop
+```
+
+**Or manually with Docker Compose:**
 ```bash
 # Start all services in background
-docker-compose up -d
+docker compose up -d
 
 # View logs
-docker-compose logs -f
+docker compose logs -f
 
 # Stop all services
-docker-compose down
+docker compose down
 ```
+
+**Note:** The `manage.sh` script automatically detects whether you have `docker compose` (new) or `docker-compose` (old standalone).
 
 ### Data Persistence
 
@@ -63,29 +73,37 @@ The following data is persisted in Docker volumes:
 To backup your data:
 
 ```bash
+# Using management script (recommended)
+./manage.sh backup
+
+# Or manually:
 # Backup database
-docker-compose exec backend cp /app/trips.db /app/data/trips.db.backup
+docker compose exec backend cp /app/trips.db /app/data/trips.db.backup
 
 # Copy from container to host
-docker cp $(docker-compose ps -q backend):/app/trips.db ./backup-trips.db
+docker cp $(docker compose ps -q backend):/app/trips.db ./backup-trips.db
 
 # Backup uploads
-docker cp $(docker-compose ps -q backend):/app/uploads ./backup-uploads
+docker cp $(docker compose ps -q backend):/app/uploads ./backup-uploads
 ```
 
 ### Updating the Application
 
 ```bash
+# Using management script (recommended - includes backup)
+./manage.sh update
+
+# Or manually:
 # Pull latest changes
 git pull origin main
 
 # Rebuild and restart
-docker-compose down
-docker-compose up -d --build
+docker compose down
+docker compose up -d --build
 
 # Or without downtime
-docker-compose up -d --build --no-deps frontend
-docker-compose up -d --build --no-deps backend
+docker compose up -d --build --no-deps frontend
+docker compose up -d --build --no-deps backend
 ```
 
 ## Accessing the Admin Panel
@@ -120,22 +138,26 @@ docker-compose up -d --build --no-deps backend
 To change passwords without editing code:
 
 ```bash
+# Using management script (recommended)
+./manage.sh reset-password
+
+# Or manually:
 # Stop the container
-docker-compose stop backend
+docker compose stop backend
 
 # Edit the .env file
 nano backend/.env
 # Update ADMIN_PASSWORD and/or GUEST_PASSWORD
 
 # Restart the container
-docker-compose start backend
+docker compose start backend
 ```
 
 ### 5. Language Content
 
 Static content (instructions, tips, etc.) is in `src/language.js`:
 - Edit translations for Czech/English content
-- Restart frontend container: `docker-compose restart frontend`
+- Restart frontend container: `./manage.sh restart` or `docker compose restart frontend`
 
 ## Production Best Practices
 
@@ -180,14 +202,19 @@ Set up a cron job for automatic backups:
 ### 3. Monitor Resources
 
 ```bash
+# Using management script
+./manage.sh status
+./manage.sh logs
+
+# Or manually:
 # View resource usage
 docker stats
 
 # View logs
-docker-compose logs -f --tail=100
+docker compose logs -f --tail=100
 
 # Check health
-docker-compose ps
+docker compose ps
 ```
 
 ### 4. Security Checklist
@@ -196,7 +223,7 @@ docker-compose ps
 - ✅ Strong ADMIN_PASSWORD and GUEST_PASSWORD
 - ✅ HTTPS enabled with valid SSL certificate
 - ✅ Firewall configured (only ports 80, 443 open)
-- ✅ Regular security updates: `docker-compose pull && docker-compose up -d`
+- ✅ Regular security updates: `./manage.sh update` or `docker compose pull && docker compose up -d`
 - ✅ Database backups automated
 - ✅ File upload limits enforced (max 10 photos per trip)
 
@@ -206,7 +233,8 @@ docker-compose ps
 
 ```bash
 # Check logs
-docker-compose logs backend
+./manage.sh logs
+# Or: docker compose logs backend
 
 # Common issues:
 # - Port 3000 already in use: Change BACKEND_PORT in .env
@@ -217,17 +245,19 @@ docker-compose logs backend
 
 ```bash
 # Verify password in .env
-docker-compose exec backend cat .env | grep PASSWORD
+docker compose exec backend cat .env | grep PASSWORD
 
 # Check JWT_SECRET is set
-docker-compose exec backend cat .env | grep JWT_SECRET
+docker compose exec backend cat .env | grep JWT_SECRET
 ```
 
 ### Database issues
 
 ```bash
 # Access database directly
-docker-compose exec backend sh
+./manage.sh db
+# Or manually:
+docker compose exec backend sh
 cd /app
 sqlite3 trips.db
 
@@ -243,13 +273,14 @@ SELECT * FROM bucket_list;
 
 ```bash
 # Check uploads directory permissions
-docker-compose exec backend ls -la /app/uploads
+docker compose exec backend ls -la /app/uploads
 
 # Check disk space
 df -h
 
 # View upload errors in logs
-docker-compose logs backend | grep -i upload
+./manage.sh logs | grep -i upload
+# Or: docker compose logs backend | grep -i upload
 ```
 
 ## Advanced Configuration
@@ -263,7 +294,7 @@ FRONTEND_PORT=8080
 BACKEND_PORT=8000
 ```
 
-Then run: `docker-compose up -d`
+Then run: `./manage.sh start` or `docker compose up -d`
 
 ### Database Migration
 
@@ -271,19 +302,19 @@ To move database from old deployment:
 
 ```bash
 # Stop current container
-docker-compose stop backend
+docker compose stop backend
 
 # Copy new database
-docker cp ./old-trips.db $(docker-compose ps -q backend):/app/trips.db
+docker cp ./old-trips.db $(docker compose ps -q backend):/app/trips.db
 
 # Start container
-docker-compose start backend
+docker compose start backend
 ```
 
 ## Support
 
 For issues or questions:
-1. Check logs: `docker-compose logs`
+1. Check logs: `./manage.sh logs`
 2. Review this guide
 3. Check GitHub issues (if applicable)
 

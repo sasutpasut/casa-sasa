@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>Casa Sasa</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
     <style>
       /* Inline critical CSS to hide content before auth check */
       body:not(.auth-verified) { opacity: 0; }
@@ -14,9 +15,8 @@
       <div class="header">
         <div class="header-actions"></div>
         <div class="header-content">
-          <a href="/index.html" style="text-decoration:none;color:inherit;">
+          <a href="/" style="text-decoration:none;color:inherit;">
             <h1>CASA SASA</h1>
-            <div data-i18n="header.subtitle" style="font-family:Georgia,serif;font-style:italic;font-size:15px;color:#bfe0cc;margin-top:8px">an apartment in the heart of the Italian Alps</div>
           </a>
         </div>
         <div class="header-actions"></div>
@@ -27,7 +27,6 @@
         <div class="tricolore-red"></div>
       </div>
       <nav id="navigation">
-        <script type="module" src="/src/main.js"></script>
       </nav>
       <div id="content-container">
         <div style="padding: 22px 26px;">
@@ -94,74 +93,6 @@
               <!-- Bucket list items will be loaded here -->
             </ul>
           </div>
-        </div>
-
-        <div class="form-container" style="display:none;">
-          <h3>Add a new trip</h3>
-          <form id="add-trip-form" enctype="multipart/form-data">
-            <div class="form-group">
-              <label for="trip-name">Trip Name:</label>
-              <input type="text" id="trip-name" name="trip-name" required />
-            </div>
-            <div class="form-group">
-              <label for="trip-author">Author:</label>
-              <input type="text" id="trip-author" name="trip-author" required />
-            </div>
-            <div class="form-group">
-              <label for="trip-map-url">URL to route:</label>
-              <input type="text" id="trip-map-url" name="trip-map-url" placeholder="e.g., https://mapy.cz/s/..." required />
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="trip-length">Length (km):</label>
-                <input type="number" step="0.1" id="trip-length" name="trip-length" required />
-              </div>
-              <div class="form-group">
-                <label for="trip-elevation">Elevation (m):</label>
-                <input type="number" id="trip-elevation" name="trip-elevation" required />
-              </div>
-              <div class="form-group">
-                <label for="trip-difficulty">Difficulty:</label>
-                <select id="trip-difficulty" name="trip-difficulty" required>
-                  <option value="easy">Easy</option>
-                  <option value="medium">Medium</option>
-                  <option value="hard">Hard</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="trip-type">Trip Type:</label>
-                <select id="trip-type" name="trip-type" required>
-                  <option value="hike">Hike</option>
-                  <option value="city">City</option>
-                  <option value="ascend">Ascend</option>
-                  <option value="bike">Bike</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="start-from-moggio">Start from Moggio:</label>
-                <select id="start-from-moggio" name="start-from-moggio" required>
-                  <option value="true">Yes</option>
-                  <option value="false">No (need car)</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="drive-time">Drive Time (min):</label>
-                <input type="number" id="drive-time" name="drive-time" placeholder="0 if from Moggio" value="0" />
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="trip-description">Description:</label>
-              <textarea id="trip-description" rows="6" required></textarea>
-            </div>
-            <div class="form-group">
-              <label for="trip-photos">Trip Photos (up to 10):</label>
-              <input type="file" id="trip-photos" name="trip-photos" accept="image/*" multiple />
-            </div>
-            <button type="submit" class="btn-submit">Add Trip</button>
-          </form>
-
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { API_URL } from './config.js'
 // Check authentication and redirect to login if not authenticated
 export async function requireAuth() {
     // Don't check auth on login page
-    if (window.location.pathname.includes('login.html')) {
+    if (window.location.pathname.includes('login')) {
         document.body.classList.add('auth-verified');
         return;
     }
@@ -18,7 +18,7 @@ export async function requireAuth() {
             // Store the intended destination
             sessionStorage.setItem('intended_url', window.location.href);
             // Redirect to login immediately without showing content
-            window.location.replace('/login.html');
+            window.location.replace('/login');
         } else {
             // User is authenticated, show the page
             document.body.classList.add('auth-verified');
@@ -26,6 +26,6 @@ export async function requireAuth() {
     } catch (error) {
         console.error('Auth check failed:', error);
         // On error, redirect to login immediately
-        window.location.replace('/login.html');
+        window.location.replace('/login');
     }
 }

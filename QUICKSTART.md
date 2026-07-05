@@ -4,8 +4,10 @@ Get Casa Sasa running in 5 minutes!
 
 ## Prerequisites
 
-- Docker and Docker Compose installed
+- Docker (with Compose plugin) installed
 - Port 80 and 3000 available
+
+**Note:** Modern Docker includes Compose as a plugin (`docker compose`). If you have the old standalone version, use `docker-compose` instead.
 
 ## Installation Steps
 
@@ -32,10 +34,13 @@ GUEST_PASSWORD=your_secure_guest_password
 # Make management script executable
 chmod +x manage.sh
 
-# Start all services
+# Start all services (recommended)
 ./manage.sh start
 
-# Or manually with docker-compose
+# Or manually with docker compose
+docker compose up -d
+
+# Or with older docker-compose
 docker-compose up -d
 ```
 

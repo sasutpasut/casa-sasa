@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>Casa Sasa</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
     <style>
       /* Inline critical CSS to hide content before auth check */
       body:not(.auth-verified) { opacity: 0; }
@@ -14,9 +15,8 @@
       <div class="header">
         <div class="header-actions"></div>
         <div class="header-content">
-          <a href="/index.html" style="text-decoration:none;color:inherit;">
+          <a href="/" style="text-decoration:none;color:inherit;">
             <h1>CASA SASA</h1>
-            <div data-i18n="header.subtitle" style="font-family:Georgia,serif;font-style:italic;font-size:15px;color:#bfe0cc;margin-top:8px">an apartment in the heart of the Italian Alps</div>
           </a>
         </div>
         <div class="header-actions"></div>
@@ -36,12 +36,15 @@
 
           <!-- Check In Section -->
           <h2 data-i18n="instructions.checkIn" style="font-family:Georgia,serif;color:#0b5c34;font-size:20px;margin:20px 0 8px;font-weight:bold;">Check In</h2>
+          <img src="/src/assets/gallery/get_in.png" alt="Getting in" style="width:100%;max-width:300px;height:auto;margin:0 0 20px 0;display:block;cursor:pointer;" onclick="openImageInNewTab('/src/assets/gallery/get_in.png')">
+
           <div class="box" style="margin-bottom: 20px;">
             <h3 data-i18n="instructions.water">Water</h3>
             <ul style="margin:0;padding-left:22px;font-size:14px;line-height:1.7;">
               <li data-i18n="instructions.waterValve">The main water valve is located right at the entrance, in the left cabinet behind the wooden door</li>
               <li data-i18n="instructions.waterLabel">Labeled with the name "Janíčková"</li>
             </ul>
+            <img src="/src/assets/gallery/water.png" alt="Water valve" style="width:100%;max-width:300px;height:auto;margin:12px 0 0 0;display:block;cursor:pointer;" onclick="openImageInNewTab('/src/assets/gallery/water.png')">
           </div>
 
           <div class="box" style="margin-bottom: 20px;">
@@ -49,8 +52,8 @@
             <ul style="margin:0;padding-left:22px;font-size:14px;line-height:1.7;">
               <li data-i18n="instructions.electricityFuse">Fuse box is located right after entering the building's main entrance</li>
               <li data-i18n="instructions.electricitySwitch">The main electricity switch is in the first cabinet on the left as you enter the apartment</li>
-              <li data-i18n="instructions.electricityLabel">Labeled with the name "Janíčková"</li>
             </ul>
+            <img src="/src/assets/gallery/electricity.png" alt="Electricity switches" style="width:100%;max-width:300px;height:auto;margin:12px 0 0 0;display:block;cursor:pointer;" onclick="openImageInNewTab('/src/assets/gallery/electricity.png')">
           </div>
 
           <div class="box" style="margin-bottom: 20px;">
@@ -68,7 +71,8 @@
           </div>
 
           <div class="box" style="margin-bottom: 20px;">
-            <p style="margin:0;font-size:14px;line-height:1.6;"><strong data-i18n="instructions.noteLabel">Note:</strong> <span data-i18n="instructions.noteText">Clean bed linens are available in the cabinet. You can make up the beds and sofa bed in the bathroom. Down the stairs, there's a large closet with additional supplies (cola, extra linens, etc.).</span></p>
+            <p style="margin:0 0 12px;font-size:14px;line-height:1.6;"><strong data-i18n="instructions.noteLabel">Note:</strong> <span data-i18n="instructions.noteText">Clean bed linens are available in the cabinet. You can make up the beds and sofa bed in the bathroom. Down the stairs, there's a large closet with additional supplies (cola, extra linens, etc.).</span></p>
+            <img src="/src/assets/gallery/cellar.png" alt="Cellar" style="width:100%;max-width:300px;height:auto;margin:0 0 0 0;display:block;cursor:pointer;" onclick="openImageInNewTab('/src/assets/gallery/cellar.png')">
           </div>
 
           <!-- Check Out Section -->
@@ -99,8 +103,29 @@
               <li data-i18n="instructions.amenitiesLaundry">Laundry: No washing machine available (coming soon)</li>
             </ul>
           </div>
+
+          <!-- Photos Section -->
+          <h2 data-i18n="instructions.photosTitle" style="font-family:Georgia,serif;color:#0b5c34;font-size:20px;margin:30px 0 8px;font-weight:bold;">Photos of the Apartment</h2>
+          <div class="box" style="margin-bottom: 20px;">
+            <div class="apartment-photos-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;padding:0;">
+              <img src="/src/assets/gallery/DSCF1730.JPG" alt="Apartment photo" style="width:100%;height:250px;object-fit:cover;cursor:pointer;" onclick="openImageInNewTab('/src/assets/gallery/DSCF1730.JPG')">
+              <img src="/src/assets/gallery/DSCF1731.JPG" alt="Apartment photo" style="width:100%;height:250px;object-fit:cover;cursor:pointer;" onclick="openImageInNewTab('/src/assets/gallery/DSCF1731.JPG')">
+              <img src="/src/assets/gallery/DSCF1733.JPG" alt="Apartment photo" style="width:100%;height:250px;object-fit:cover;cursor:pointer;" onclick="openImageInNewTab('/src/assets/gallery/DSCF1733.JPG')">
+              <img src="/src/assets/gallery/DSCF1734.JPG" alt="Apartment photo" style="width:100%;height:250px;object-fit:cover;cursor:pointer;" onclick="openImageInNewTab('/src/assets/gallery/DSCF1734.JPG')">
+              <img src="/src/assets/gallery/DSCF1735.JPG" alt="Apartment photo" style="width:100%;height:250px;object-fit:cover;cursor:pointer;" onclick="openImageInNewTab('/src/assets/gallery/DSCF1735.JPG')">
+              <img src="/src/assets/gallery/DSCF1755.JPG" alt="Apartment photo" style="width:100%;height:250px;object-fit:cover;cursor:pointer;" onclick="openImageInNewTab('/src/assets/gallery/DSCF1755.JPG')">
+              <img src="/src/assets/gallery/DSCF1761.JPG" alt="Apartment photo" style="width:100%;height:250px;object-fit:cover;cursor:pointer;" onclick="openImageInNewTab('/src/assets/gallery/DSCF1761.JPG')">
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
+    <script>
+      // Helper function to open image in new tab
+      function openImageInNewTab(url) {
+        window.open(url, '_blank');
+      }
+    </script>
   </body>
 </html>

@@ -376,30 +376,43 @@ app.get('/api/trips/:id/my-rating', (req, res) => {
 
 // Add a new trip
 app.post('/api/trips', authenticateToken(), upload.array('photos', 10), (req, res) => {
+    console.log('POST /api/trips - Request received');
+    console.log('User:', req.user);
+    console.log('Body:', req.body);
+    console.log('Files:', req.files ? req.files.length : 0);
+
     const { name, length, elevation, difficulty, description, author, map_url, start_from_moggio, drive_time, trip_type } = req.body;
 
     // Input validation
     if (!name || typeof name !== 'string' || name.length > 200) {
+        console.error('Validation failed: Invalid trip name');
         return res.status(400).json({ error: 'Invalid trip name' });
     }
     if (!length || isNaN(parseFloat(length))) {
+        console.error('Validation failed: Invalid length:', length);
         return res.status(400).json({ error: 'Invalid length' });
     }
     if (!elevation || isNaN(parseInt(elevation))) {
+        console.error('Validation failed: Invalid elevation:', elevation);
         return res.status(400).json({ error: 'Invalid elevation' });
     }
     if (!['easy', 'medium', 'hard'].includes(difficulty)) {
+        console.error('Validation failed: Invalid difficulty:', difficulty);
         return res.status(400).json({ error: 'Invalid difficulty' });
     }
     if (!['hike', 'city', 'ascent', 'bike', 'attraction'].includes(trip_type)) {
+        console.error('Validation failed: Invalid trip type:', trip_type);
         return res.status(400).json({ error: 'Invalid trip type' });
     }
     if (description && description.length > 5000) {
+        console.error('Validation failed: Description too long');
         return res.status(400).json({ error: 'Description too long' });
     }
 
     const photoFilenames = req.files ? req.files.map(file => file.filename) : [];
     const photosJson = JSON.stringify(photoFilenames);
+
+    console.log('Validation passed. Inserting trip into database...');
 
     const query = `
         INSERT INTO trips (name, length, elevation, difficulty, description, photos, author, map_url, start_from_moggio, drive_time, trip_type)
@@ -420,8 +433,10 @@ app.post('/api/trips', authenticateToken(), upload.array('photos', 10), (req, re
         trip_type
     ], function(err) {
         if (err) {
-            return res.status(500).json({ error: 'Failed to add trip' });
+            console.error('Database error:', err);
+            return res.status(500).json({ error: 'Failed to add trip', details: err.message });
         }
+        console.log('Trip added successfully! ID:', this.lastID);
         res.json({ message: 'Trip added successfully', tripId: this.lastID });
     });
 });
