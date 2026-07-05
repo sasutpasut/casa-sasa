@@ -12,13 +12,16 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // 2. APPLY CORE MIDDLEWARES
-// Allow requests from localhost and local network IPs
+// Allow requests from localhost and local network IPs (dev and production)
 const allowedOrigins = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
-    /^http:\/\/192\.168\.\d{1,3}\.\d{1,3}:5173$/,
-    /^http:\/\/10\.\d{1,3}\.\d{1,3}\.\d{1,3}:5173$/,
-    /^http:\/\/172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}:5173$/
+    'http://localhost',
+    'http://localhost:80',
+    /^http:\/\/192\.168\.\d{1,3}\.\d{1,3}(:\d+)?$/,
+    /^http:\/\/10\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?$/,
+    /^http:\/\/172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}(:\d+)?$/,
+    /^http:\/\/178\.104\.42\.120(:\d+)?$/
 ];
 
 app.use(cors({
@@ -37,6 +40,7 @@ app.use(cors({
         if (isAllowed) {
             callback(null, true);
         } else {
+            console.log('CORS blocked origin:', origin);
             callback(new Error('Not allowed by CORS'));
         }
     },
