@@ -164,22 +164,14 @@ app.post('/api/auth/login', async (req, res) => {
 
     let role = null;
 
-    // Debug: Log password attempt info (remove in production)
-    console.log('Login attempt - received length:', password.length);
-    console.log('Admin password set:', !!process.env.ADMIN_PASSWORD, 'length:', process.env.ADMIN_PASSWORD?.length);
-    console.log('Guest password set:', !!process.env.GUEST_PASSWORD, 'length:', process.env.GUEST_PASSWORD?.length);
-
     if (password === process.env.ADMIN_PASSWORD) role = 'admin';
     else if (password === process.env.GUEST_PASSWORD) role = 'guest';
 
     if (!role) {
-        console.log('Login failed - no role matched');
         // Add 3-second delay on failed login to prevent brute force
         await new Promise(resolve => setTimeout(resolve, 3000));
         return res.status(401).json({ error: 'Invalid password.' });
     }
-
-    console.log('Login successful - role:', role);
 
     const token = jwt.sign({ role }, process.env.JWT_SECRET, { expiresIn: '24h' });
 
