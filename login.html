@@ -45,10 +45,11 @@
       e.preventDefault();
       const password = document.getElementById('password').value;
 
-      // Determine the API URL based on current host
+      // In production, API requests go through nginx proxy (no port needed)
+      // In development, connect directly to backend on port 3000
       const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:3000'
-        : `http://${window.location.hostname}:3000`;
+        : '';
 
       const res = await fetch(`${apiUrl}/api/auth/login`, {
         method: 'POST',

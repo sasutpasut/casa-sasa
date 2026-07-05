@@ -24,7 +24,7 @@ services:
       - GUEST_PASSWORD=${GUEST_PASSWORD:-guest123}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
     volumes:
-      - ./backend:/app:ro
+      - ./backend:/app
       - casa-sasa-data:/app/data
       - casa-sasa-uploads:/app/uploads
     restart: always
