@@ -198,8 +198,9 @@ function reset_password() {
         exit 1
     fi
 
-    echo -e "${YELLOW}Restarting backend to apply changes...${NC}"
-    $DOCKER_COMPOSE restart backend
+    echo -e "${YELLOW}Recreating backend container to apply changes...${NC}"
+    echo -e "${YELLOW}(Environment variables require container recreation, not just restart)${NC}"
+    $DOCKER_COMPOSE up -d --force-recreate --no-deps backend
     echo -e "${GREEN}Password reset complete!${NC}"
 }
 
