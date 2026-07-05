@@ -18,6 +18,9 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 # Copy SSL nginx configuration
 COPY nginx-ssl.conf /etc/nginx/conf.d/default.conf
 
+# Create directory for SSL certificates
+RUN mkdir -p /etc/ssl/cloudflare
+
 EXPOSE 80
 EXPOSE 443
 

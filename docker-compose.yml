@@ -4,7 +4,14 @@ services:
   frontend:
     build: .
     ports:
-      - "${FRONTEND_PORT:-80}:80"
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Mount SSL certificates
+      # For Cloudflare Origin certificates:
+      - /etc/ssl/cloudflare:/etc/ssl/cloudflare:ro
+      # For Let's Encrypt (uncomment if using certbot):
+      # - /etc/letsencrypt:/etc/letsencrypt:ro
     restart: always
     depends_on:
       - backend
