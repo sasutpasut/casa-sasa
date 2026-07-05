@@ -170,22 +170,35 @@ function reset_password() {
     echo "2. Guest Password"
     read -p "Which password to reset? (1/2): " CHOICE
 
+    ENV_FILE="backend/.env"
+
+    if [ ! -f "$ENV_FILE" ]; then
+        echo -e "${RED}Error: $ENV_FILE not found!${NC}"
+        exit 1
+    fi
+
     if [ "$CHOICE" == "1" ]; then
         read -sp "Enter new admin password: " NEW_PASSWORD
         echo ""
-        sed -i "s/ADMIN_PASSWORD=.*/ADMIN_PASSWORD=$NEW_PASSWORD/" backend/.env
-        echo -e "${GREEN}Admin password updated!${NC}"
+        # Use a temporary file to avoid sed issues with special characters
+        grep -v "^ADMIN_PASSWORD=" "$ENV_FILE" > "$ENV_FILE.tmp"
+        echo "ADMIN_PASSWORD=$NEW_PASSWORD" >> "$ENV_FILE.tmp"
+        mv "$ENV_FILE.tmp" "$ENV_FILE"
+        echo -e "${GREEN}Admin password updated in $ENV_FILE${NC}"
     elif [ "$CHOICE" == "2" ]; then
         read -sp "Enter new guest password: " NEW_PASSWORD
         echo ""
-        sed -i "s/GUEST_PASSWORD=.*/GUEST_PASSWORD=$NEW_PASSWORD/" backend/.env
-        echo -e "${GREEN}Guest password updated!${NC}"
+        # Use a temporary file to avoid sed issues with special characters
+        grep -v "^GUEST_PASSWORD=" "$ENV_FILE" > "$ENV_FILE.tmp"
+        echo "GUEST_PASSWORD=$NEW_PASSWORD" >> "$ENV_FILE.tmp"
+        mv "$ENV_FILE.tmp" "$ENV_FILE"
+        echo -e "${GREEN}Guest password updated in $ENV_FILE${NC}"
     else
         echo -e "${RED}Invalid choice!${NC}"
         exit 1
     fi
 
-    echo -e "${YELLOW}Restarting backend...${NC}"
+    echo -e "${YELLOW}Restarting backend to apply changes...${NC}"
     $DOCKER_COMPOSE restart backend
     echo -e "${GREEN}Password reset complete!${NC}"
 }
