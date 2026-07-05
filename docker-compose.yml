@@ -17,12 +17,10 @@ services:
     command: sh -c "npm install && node server.js"
     ports:
       - "${BACKEND_PORT:-3000}:3000"
+    env_file:
+      - backend/.env
     environment:
       - NODE_ENV=production
-      - PORT=3000
-      - JWT_SECRET=${JWT_SECRET:-please_change_this_secret}
-      - GUEST_PASSWORD=${GUEST_PASSWORD:-guest123}
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
     volumes:
       - ./backend:/app
       - casa-sasa-data:/app/data
