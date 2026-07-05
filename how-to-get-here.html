@@ -3,36 +3,60 @@
   <head>
     <meta charset="UTF-8" />
     <title>Casa Sasa</title>
+    <style>
+      /* Inline critical CSS to hide content before auth check */
+      body:not(.auth-verified) { opacity: 0; }
+    </style>
   </head>
 
   <body>
     <div class="main-container">
       <div class="header">
-        <h1>Casa Sasa</h1>
+        <div class="header-actions"></div>
+        <div class="header-content">
+          <a href="/index.html" style="text-decoration:none;color:inherit;">
+            <h1>CASA SASA</h1>
+            <div data-i18n="header.subtitle" style="font-family:Georgia,serif;font-style:italic;font-size:15px;color:#bfe0cc;margin-top:8px">an apartment in the heart of the Italian Alps</div>
+          </a>
+        </div>
+        <div class="header-actions"></div>
+      </div>
+      <div class="tricolore">
+        <div class="tricolore-green"></div>
+        <div class="tricolore-white"></div>
+        <div class="tricolore-red"></div>
       </div>
       <nav id="navigation">
         <script type="module" src="/src/main.js"></script>
       </nav>
       <div id="content-container">
         <section id="welcome-box">
-          <h2>How to get here</h2>
+          <h2 data-i18n="howToGetHere.title">How to Get Here</h2>
+          <hr class="section-divider">
         </section>
-        <section class="features-grid"> 
+        <section class="features-grid">
           <section class="box">
-            <h3>Car</h3>
-                <ul>
-                    <li>Just like, drive man</li>
-                    <li>Park wherever you don't block the street</li>
-                </ul>
+            <h3 data-i18n="howToGetHere.byCar">By Car</h3>
+            <p data-i18n="howToGetHere.carDescription" style="margin:0 0 12px;font-size:14px;line-height:1.6">The apartment is located at <strong>Piazza Uffici 6, 33015 Moggio Udinese, Italia</strong>. From Brno, the journey takes approximately 6 hours (about 600 km) via Vienna and Villach, then toward Moggio Udinese.</p>
           </section>
           <section class="box">
-            <h3>Train</h3>
-                <ul>
-                  <li>There's a train directly from Brno to Villach</li>
-                </ul>
+            <h3 data-i18n="howToGetHere.byTrain">By Train</h3>
+            <p data-i18n="howToGetHere.trainDescription" style="margin:0 0 12px;font-size:14px;line-height:1.6">The nearest major train station is <strong>Villach, Austria</strong>. Direct train service is available from Brno. From Villach, take a local train or drive (about 40 minutes) to reach Moggio Udinese.</p>
           </section>
+        </section>
 
-        </section>
+        <div style="padding: 0 26px 22px;">
+          <h2 data-i18n="howToGetHere.parking" style="font-family:Georgia,serif;color:#0b5c34;font-size:20px;margin:20px 0 8px;font-weight:bold;">Parking</h2>
+          <hr class="section-divider">
+          <div class="box" style="margin-bottom: 20px;">
+            <ul style="margin:0;padding-left:22px;font-size:14px;line-height:1.7;">
+              <li data-i18n="howToGetHere.parkingBest">Best option: Free parking behind the town hall</li>
+              <li data-i18n="howToGetHere.parkingAlt">Alternative: Parking available at the bus stop</li>
+              <li data-i18n="howToGetHere.parkingLimited">Limited parking: A few spaces on the square in front of the building, but limited to 1 hour maximum</li>
+              <li data-i18n="howToGetHere.parkingGeneral">General rule: You can park anywhere as long as you don't block traffic flow</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </body>

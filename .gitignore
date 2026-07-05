@@ -18,6 +18,12 @@ src/assets/instructions.txt
 backend/uploads/*
 !backend/uploads/.gitkeep
 
+# Backups
+backups/
+*.backup
+*.bak
+*.tar.gz
+
 # OS files
 .DS_Store
 Thumbs.db
@@ -26,3 +32,6 @@ Thumbs.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Docker
+.dockerignore

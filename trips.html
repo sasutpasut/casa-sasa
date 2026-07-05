@@ -3,23 +3,100 @@
   <head>
     <meta charset="UTF-8" />
     <title>Casa Sasa</title>
+    <style>
+      /* Inline critical CSS to hide content before auth check */
+      body:not(.auth-verified) { opacity: 0; }
+    </style>
   </head>
 
   <body>
     <div class="main-container">
       <div class="header">
-        <h1>Casa Sasa</h1>
+        <div class="header-actions"></div>
+        <div class="header-content">
+          <a href="/index.html" style="text-decoration:none;color:inherit;">
+            <h1>CASA SASA</h1>
+            <div data-i18n="header.subtitle" style="font-family:Georgia,serif;font-style:italic;font-size:15px;color:#bfe0cc;margin-top:8px">an apartment in the heart of the Italian Alps</div>
+          </a>
+        </div>
+        <div class="header-actions"></div>
+      </div>
+      <div class="tricolore">
+        <div class="tricolore-green"></div>
+        <div class="tricolore-white"></div>
+        <div class="tricolore-red"></div>
       </div>
       <nav id="navigation">
         <script type="module" src="/src/main.js"></script>
       </nav>
       <div id="content-container">
-        <div id="trips-container"> 
-          <section class="box">
-            <h3>Trips</h3>
-          </section>
+        <div style="padding: 22px 26px;">
+          <h1 class="section-header" data-i18n="trips.title">Trips & Tips</h1>
+          <hr class="section-divider">
+          <p data-i18n="trips.subtitle" style="margin:0 0 14px;font-size:14px;font-style:italic;color:#555">Discover the best hiking trails and local recommendations in the area</p>
+
+          <!-- Filters -->
+          <div style="background:#f0eee6;border:1px solid #c4c0b4;padding:12px;margin-bottom:16px;">
+            <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center;">
+              <div>
+                <label data-i18n="trips.filterStart" style="font-family:'Courier New',monospace;font-size:12px;font-weight:bold;color:#0b5c34;margin-right:8px;">Start:</label>
+                <select id="filter-car" style="font-family:'Courier New',monospace;font-size:12px;padding:4px 8px;border:1px solid #c4c0b4;">
+                  <option value="all" data-i18n="trips.filterAll">All</option>
+                  <option value="moggio" data-i18n="trips.filterMoggio">From Moggio</option>
+                  <option value="car" data-i18n="trips.filterCar">Need Car</option>
+                </select>
+              </div>
+              <div>
+                <label data-i18n="trips.filterType" style="font-family:'Courier New',monospace;font-size:12px;font-weight:bold;color:#0b5c34;margin-right:8px;">Type:</label>
+                <select id="filter-type" style="font-family:'Courier New',monospace;font-size:12px;padding:4px 8px;border:1px solid #c4c0b4;">
+                  <option value="all" data-i18n="trips.filterAll">All</option>
+                  <option value="hike" data-i18n="trips.typeHike">Hike</option>
+                  <option value="city" data-i18n="trips.typeCity">City</option>
+                  <option value="ascent" data-i18n="trips.typeAscent">Ascent</option>
+                  <option value="bike" data-i18n="trips.typeBike">Bike</option>
+                  <option value="attraction" data-i18n="trips.typeAttraction">Attraction</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Trip Button (visible only to logged-in users) -->
+          <button id="add-trip-btn" class="btn-submit" data-i18n="trips.addButton" style="display:none;width:auto;margin-bottom:16px;">+ Add New Trip</button>
         </div>
-        <div class="form-container">
+
+        <div id="trips-container"></div>
+
+        <!-- Tips Section (moved below trips) -->
+        <div style="padding: 22px 26px;">
+          <h2 data-i18n="trips.localTips" style="font-family:Georgia,serif;color:#0b5c34;font-size:20px;margin:0 0 8px;font-weight:bold;">Local Tips</h2>
+          <hr class="section-divider">
+          <div class="box" style="margin-bottom: 20px;">
+            <ul style="margin:0;padding-left:22px;font-size:14px;line-height:1.7;">
+              <li data-i18n="trips.tipBeer">Beer in Moggio: Visit Merlini bar and enjoy your drink with a view of Monte Pisimoni</li>
+              <li data-i18n="trips.tipFood">Local cuisine: Try the regional specialty frico (fried cheese) and polenta prepared in various styles</li>
+              <li data-i18n="trips.tipBakery">Fresh bread & pastries: The bakery directly across from the apartment sells desserts from Illegio</li>
+            </ul>
+          </div>
+
+          <h3 data-i18n="trips.nearbyTowns" style="font-family:Georgia,serif;color:#0b5c34;font-size:18px;margin:20px 0 8px;font-weight:bold;">Nearby Towns & Villages</h3>
+          <div class="box" style="margin-bottom: 20px;">
+            <ul style="margin:0;padding-left:22px;font-size:14px;line-height:1.7;">
+              <li data-i18n="trips.townVenzone">Venzone - Beautifully preserved medieval walled town</li>
+              <li data-i18n="trips.townGemona">Gemona - Hilltop town center worth exploring</li>
+              <li data-i18n="trips.townIllegio">Illegio - Charming mountain village</li>
+            </ul>
+          </div>
+
+          <h3 data-i18n="trips.bucketList" style="font-family:Georgia,serif;color:#0b5c34;font-size:18px;margin:20px 0 8px;font-weight:bold;">Bucket List</h3>
+          <button id="add-bucket-btn" class="btn-submit" data-i18n="trips.addBucketItem" style="display:none;width:auto;margin-bottom:12px;font-size:11px;padding:6px 12px;">+ Add Item</button>
+          <div class="box" style="margin-bottom: 20px;">
+            <ul id="bucket-list-container" style="margin:0;padding-left:22px;font-size:14px;line-height:1.7;">
+              <!-- Bucket list items will be loaded here -->
+            </ul>
+          </div>
+        </div>
+
+        <div class="form-container" style="display:none;">
           <h3>Add a new trip</h3>
           <form id="add-trip-form" enctype="multipart/form-data">
             <div class="form-group">
@@ -52,6 +129,28 @@
                 </select>
               </div>
             </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="trip-type">Trip Type:</label>
+                <select id="trip-type" name="trip-type" required>
+                  <option value="hike">Hike</option>
+                  <option value="city">City</option>
+                  <option value="ascend">Ascend</option>
+                  <option value="bike">Bike</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="start-from-moggio">Start from Moggio:</label>
+                <select id="start-from-moggio" name="start-from-moggio" required>
+                  <option value="true">Yes</option>
+                  <option value="false">No (need car)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="drive-time">Drive Time (min):</label>
+                <input type="number" id="drive-time" name="drive-time" placeholder="0 if from Moggio" value="0" />
+              </div>
+            </div>
             <div class="form-group">
               <label for="trip-description">Description:</label>
               <textarea id="trip-description" rows="6" required></textarea>
@@ -66,6 +165,114 @@
         </div>
       </div>
     </div>
+
+    <!-- Trip Detail Modal -->
+    <div id="trip-modal" class="modal">
+      <div class="modal-trip-content">
+        <span class="close-modal">&times;</span>
+        <div id="trip-modal-body"></div>
+      </div>
+    </div>
+
+    <!-- Add Trip Form Modal -->
+    <div id="trip-form-modal" class="modal">
+      <div class="modal-trip-content">
+        <span class="close-modal" id="close-form-modal">&times;</span>
+        <div style="padding: 22px 26px;">
+          <h3 data-i18n="tripForm.title" style="font-family:Georgia,serif;color:#0b5c34;font-size:20px;margin:0 0 16px;font-weight:bold;">Add a New Trip</h3>
+          <form id="add-trip-form" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="trip-name" data-i18n="tripForm.name">Trip Name:</label>
+              <input type="text" id="trip-name" name="trip-name" required />
+            </div>
+            <div class="form-group">
+              <label for="trip-author" data-i18n="tripForm.author">Author:</label>
+              <input type="text" id="trip-author" name="trip-author" required />
+            </div>
+            <div class="form-group">
+              <label for="trip-map-url" data-i18n="tripForm.mapUrl">URL to route:</label>
+              <input type="text" id="trip-map-url" name="trip-map-url" data-i18n-placeholder="tripForm.mapUrlPlaceholder" placeholder="e.g., https://mapy.cz/s/..." required />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="trip-length" data-i18n="tripForm.length">Length (km):</label>
+                <input type="number" step="0.1" id="trip-length" name="trip-length" required />
+              </div>
+              <div class="form-group">
+                <label for="trip-elevation" data-i18n="tripForm.elevation">Elevation (m):</label>
+                <input type="number" id="trip-elevation" name="trip-elevation" required />
+              </div>
+              <div class="form-group">
+                <label for="trip-difficulty" data-i18n="tripForm.difficulty">Difficulty:</label>
+                <select id="trip-difficulty" name="trip-difficulty" required>
+                  <option value="easy" data-i18n="tripForm.difficultyEasy">Easy</option>
+                  <option value="medium" data-i18n="tripForm.difficultyMedium">Medium</option>
+                  <option value="hard" data-i18n="tripForm.difficultyHard">Hard</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="trip-type" data-i18n="tripForm.tripType">Trip Type:</label>
+                <select id="trip-type" name="trip-type" required>
+                  <option value="hike" data-i18n="tripForm.typeHike">Hike</option>
+                  <option value="city" data-i18n="tripForm.typeCity">City</option>
+                  <option value="ascent" data-i18n="tripForm.typeAscent">Ascent</option>
+                  <option value="bike" data-i18n="tripForm.typeBike">Bike</option>
+                  <option value="attraction" data-i18n="tripForm.typeAttraction">Attraction</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="start-from-moggio" data-i18n="tripForm.startFromMoggio">Start from Moggio:</label>
+                <select id="start-from-moggio" name="start-from-moggio" required>
+                  <option value="true" data-i18n="tripForm.startYes">Yes</option>
+                  <option value="false" data-i18n="tripForm.startNo">No (need car)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="drive-time" data-i18n="tripForm.driveTime">Drive Time (min):</label>
+                <input type="number" id="drive-time" name="drive-time" data-i18n-placeholder="tripForm.driveTimePlaceholder" placeholder="0 if from Moggio" value="0" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="trip-description" data-i18n="tripForm.description">Description:</label>
+              <textarea id="trip-description" rows="6" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="trip-photos" data-i18n="tripForm.photos">Trip Photos (up to 10):</label>
+              <input type="file" id="trip-photos" name="trip-photos" accept="image/*" multiple />
+            </div>
+            <button type="submit" class="btn-submit" data-i18n="tripForm.submit">Add Trip</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bucket List Form Modal -->
+    <div id="bucket-form-modal" class="modal">
+      <div class="modal-trip-content">
+        <span class="close-modal" id="close-bucket-modal">&times;</span>
+        <div style="padding: 22px 26px;">
+          <h3 data-i18n="bucketListForm.addTitle" style="font-family:Georgia,serif;color:#0b5c34;font-size:20px;margin:0 0 16px;font-weight:bold;">Add Bucket List Item</h3>
+          <form id="bucket-form">
+            <div class="form-group">
+              <label for="bucket-name" data-i18n="bucketListForm.name">Item Name:</label>
+              <input type="text" id="bucket-name" name="bucket-name" required />
+            </div>
+            <div class="form-group">
+              <label for="bucket-description" data-i18n="bucketListForm.description">Description:</label>
+              <textarea id="bucket-description" name="bucket-description" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="bucket-url" data-i18n="bucketListForm.url">URL (optional):</label>
+              <input type="url" id="bucket-url" name="bucket-url" data-i18n-placeholder="bucketListForm.urlPlaceholder" placeholder="e.g., https://example.com" />
+            </div>
+            <button type="submit" class="btn-submit" data-i18n="bucketListForm.submit">Save Item</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

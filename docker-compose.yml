@@ -1,26 +1,48 @@
 version: '3.8'
 
 services:
-frontend:
+  frontend:
     build: .
     ports:
-      - "80:80"
+      - "${FRONTEND_PORT:-80}:80"
     restart: always
     depends_on:
       - backend
+    networks:
+      - casa-sasa-network
 
-backend:
-    image: node:18-alpine
+  backend:
+    image: node:20-alpine
     working_dir: /app
     command: sh -c "npm install && node server.js"
     ports:
-      - "3000:3000"
+      - "${BACKEND_PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - JWT_SECRET=${JWT_SECRET:-please_change_this_secret}
+      - GUEST_PASSWORD=${GUEST_PASSWORD:-guest123}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
     volumes:
-      - ./backend:/app
-      - gallery-photos:/app/uploads
+      - ./backend:/app:ro
+      - casa-sasa-data:/app/data
+      - casa-sasa-uploads:/app/uploads
     restart: always
+    networks:
+      - casa-sasa-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/trips"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+networks:
+  casa-sasa-network:
+    driver: bridge
 
 volumes:
-  - ./backend:/app
-  - gallery-photos:/app/uploads
-  - ./backend/trips.db:/app/trips.db
+  casa-sasa-data:
+    driver: local
+  casa-sasa-uploads:
+    driver: local

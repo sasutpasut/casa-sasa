@@ -1,13 +1,32 @@
+import { API_URL } from './config.js'
+
 let allImagePaths = [];
 let currentImageIndex = 0;
-const API_URL = 'http://localhost:3000';
+let userRole = null;
 
-export function initGallery() {
+export async function initGallery() {
     const container = document.querySelector('.gallery-grid');
     const uploadForm = document.getElementById('upload-form');
-    if (!container || !uploadForm) {
-        console.error('Gallery container or upload form not found');
+    const uploadSection = document.getElementById('upload-section');
+
+    if (!container) {
+        console.error('Gallery container not found');
         return;
+    }
+
+    // Check if user is logged in to show upload form and delete buttons
+    try {
+        const statusRes = await fetch(`${API_URL}/api/auth/status`, { credentials: 'include' });
+        const status = await statusRes.json();
+
+        if (status.loggedIn) {
+            userRole = status.role;
+            if (uploadSection) {
+                uploadSection.style.display = 'block';
+            }
+        }
+    } catch (error) {
+        console.error('Auth check failed:', error);
     }
 
     fetchImages(container);
@@ -17,19 +36,22 @@ export function initGallery() {
             event.preventDefault();
             const fileInput = document.getElementById('file-input');
             if(!fileInput.files[0]) return;
-            
+
             const formData = new FormData();
             formData.append('image', fileInput.files[0]);
 
             try {
                 const response = await fetch(`${API_URL}/api/upload`, {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    credentials: 'include'
                 });
                 if(response.ok) {
                     alert('Image uploaded successfully!');
                     fileInput.value = '';
                     fetchImages(container);
+                } else {
+                    alert('Failed to upload image. Please try again.');
                 }
             } catch (error) {
                 console.error('Error uploading image:', error);
@@ -49,7 +71,7 @@ async function fetchImages(container) {
         allImagePaths.forEach((imgPath, index) => {
             const frameElement = document.createElement('div');
             frameElement.className = 'gallery-frame';
-            
+
             const imgElement = document.createElement('img');
             imgElement.src = imgPath;
             imgElement.alt = `Gallery image ${index + 1}`;
@@ -66,14 +88,54 @@ async function fetchImages(container) {
                     frameElement.classList.add('frame-portrait');
                 }
             };
-            
+
             frameElement.appendChild(imgElement);
+
+            // Add delete button for admin users
+            if (userRole === 'admin') {
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'gallery-delete-btn';
+                deleteBtn.textContent = '🗑️';
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation(); // Prevent opening modal
+                    deleteImage(imgPath, container);
+                };
+                frameElement.appendChild(deleteBtn);
+            }
+
             container.appendChild(frameElement);
         });
 
         setupModalControls();
     } catch (error) {
         console.error('Error fetching images:', error);
+    }
+}
+
+async function deleteImage(imagePath, container) {
+    if (!confirm('Are you sure you want to delete this image?')) {
+        return;
+    }
+
+    try {
+        // Extract filename from path
+        const filename = imagePath.split('/').pop();
+
+        const response = await fetch(`${API_URL}/api/images/${filename}`, {
+            method: 'DELETE',
+            credentials: 'include'
+        });
+
+        if (response.ok) {
+            alert('Image deleted successfully!');
+            fetchImages(container);
+        } else {
+            const error = await response.json();
+            alert(error.error || 'Failed to delete image.');
+        }
+    } catch (error) {
+        console.error('Error deleting image:', error);
+        alert('An error occurred while deleting the image.');
     }
 }
 

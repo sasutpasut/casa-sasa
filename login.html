@@ -3,25 +3,54 @@
 <head>
   <meta charset="UTF-8"><title>Login - Casa Sasa</title>
   <link rel="stylesheet" href="src/style.css">
+  <script>
+    // Mark login page as auth-verified immediately to show content
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.add('auth-verified');
+    });
+  </script>
 </head>
-<body>
-  <div class="content" style="margin-top: 100px;">
-    <div class="form-container" style="max-width: 400px;">
-      <h2>Access Control</h2>
-      <form id="login-form">
-        <div class="form-group">
-          <label for="password">Enter Access Password:</label>
-          <input type="password" id="password" required placeholder="••••••••">
-        </div>
-        <button type="submit" class="btn-submit">Unlock App</button>
-      </form>
+<body class="auth-verified">
+  <div class="main-container" style="margin-top: 100px;">
+    <div class="header">
+      <div class="header-actions"></div>
+      <div class="header-content">
+        <a href="/index.html" style="text-decoration:none;color:inherit;">
+          <h1>CASA SASA</h1>
+          <div style="font-family:Georgia,serif;font-style:italic;font-size:15px;color:#bfe0cc;margin-top:8px">Un appartamento nel cuore delle Alpi italiane</div>
+        </a>
+      </div>
+      <div class="header-actions"></div>
+    </div>
+    <div class="tricolore">
+      <div class="tricolore-green"></div>
+      <div class="tricolore-white"></div>
+      <div class="tricolore-red"></div>
+    </div>
+    <div style="background:#ffffff;padding:40px 26px;min-height:300px;">
+      <div class="form-container" style="max-width: 400px;margin:0 auto;">
+        <h3>Controllo Accesso</h3>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" required placeholder="••••••••">
+          </div>
+          <button type="submit" class="btn-submit">Accedi</button>
+        </form>
+      </div>
     </div>
   </div>
   <script>
     document.getElementById('login-form').onsubmit = async (e) => {
       e.preventDefault();
       const password = document.getElementById('password').value;
-      const res = await fetch('http://localhost:3000/api/auth/login', {
+
+      // Determine the API URL based on current host
+      const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:3000'
+        : `http://${window.location.hostname}:3000`;
+
+      const res = await fetch(`${apiUrl}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password: password }),
@@ -29,7 +58,13 @@
       });
       const data = await res.json();
       if (data.success) {
-        window.location.href = 'trips.html'; // Redirect to workspace
+        // Wait a bit for the cookie to be set before redirecting
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        // Redirect to intended URL or default to index.html
+        const intendedUrl = sessionStorage.getItem('intended_url');
+        sessionStorage.removeItem('intended_url');
+        window.location.href = intendedUrl || '/index.html';
       } else {
         alert(data.error || "Login failed.");
       }

@@ -3,30 +3,50 @@
   <head>
     <meta charset="UTF-8" />
     <title>Casa Sasa</title>
+    <style>
+      /* Inline critical CSS to hide content before auth check */
+      body:not(.auth-verified) { opacity: 0; }
+    </style>
   </head>
 
   <body>
     <div class="main-container">
       <div class="header">
-        <h1>Casa Sasa</h1>
+        <div class="header-actions"></div>
+        <div class="header-content">
+          <a href="/index.html" style="text-decoration:none;color:inherit;">
+            <h1>CASA SASA</h1>
+            <div data-i18n="header.subtitle" style="font-family:Georgia,serif;font-style:italic;font-size:15px;color:#bfe0cc;margin-top:8px">an apartment in the heart of the Italian Alps</div>
+          </a>
+        </div>
+        <div class="header-actions"></div>
+      </div>
+      <div class="tricolore">
+        <div class="tricolore-green"></div>
+        <div class="tricolore-white"></div>
+        <div class="tricolore-red"></div>
       </div>
       <nav id="navigation">
         <script type="module" src="/src/main.js"></script>
       </nav>
       <div id="content-container">
-        <section id="welcome-box">
-          <h2>Photos</h2>
-        </section>
+        <div style="padding: 22px 26px;">
+          <h1 class="section-header" data-i18n="gallery.title">Photo Gallery</h1>
+          <hr class="section-divider">
+          <p data-i18n="gallery.subtitle" style="margin:0 0 14px;font-size:14px;font-style:italic;color:#555">Photos of the apartment and surroundings</p>
+        </div>
         <div class="gallery-grid">
         </div>
-          <div class="upload-section">
-          <h3>Upload a new photo</h3>
+        <div class="form-container" id="upload-section" style="display:none;">
+          <h3 data-i18n="gallery.uploadTitle">Upload a New Photo</h3>
           <form id="upload-form">
-            <input type="file" id="file-input" name="photo" accept="image/*" required />
-            <button type="submit">Upload</button>
+            <div class="form-group">
+              <label for="file-input" data-i18n="gallery.uploadLabel">Select Image:</label>
+              <input type="file" id="file-input" name="photo" accept="image/*" required />
+            </div>
+            <button type="submit" class="btn-submit" data-i18n="gallery.uploadButton">Upload Photo</button>
           </form>
         </div>
-        </section>
       </div>
     </div>
     <div id="image-modal" class="modal">

@@ -1,12 +1,14 @@
+import { t } from './language.js'
+
 export function renderNavigation() {
   const sidebar = document.getElementById('navigation')
   sidebar.innerHTML = `
     <ul>
-      <li><a href="/index.html">Home</a></li>
-      <li><a href="/how-to-get-here.html">How to get here</a></li>
-      <li><a href="/instructions.html">Instructions</a></li>
-      <li><a href="/trips.html">Trips</a></li>
-      <li><a href="/gallery.html">Gallery</a></li>
+      <li><a href="/index.html">${t('nav.home')}</a></li>
+      <li><a href="/how-to-get-here.html">${t('nav.howToGetHere')}</a></li>
+      <li><a href="/instructions.html">${t('nav.instructions')}</a></li>
+      <li><a href="/trips.html">${t('nav.tripsAndTips')}</a></li>
+      <li><a href="/gallery.html">${t('nav.gallery')}</a></li>
     </ul>
   `
 }

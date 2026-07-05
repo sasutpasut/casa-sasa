@@ -3,33 +3,51 @@
   <head>
     <meta charset="UTF-8" />
     <title>Casa Sasa</title>
+    <style>
+      /* Inline critical CSS to hide content before auth check */
+      body:not(.auth-verified) { opacity: 0; }
+    </style>
   </head>
 
   <body>
     <div class="main-container">
       <div class="header">
-        <h1>Casa Sasa</h1>
+        <div class="header-actions"></div>
+        <div class="header-content">
+          <a href="/index.html" style="text-decoration:none;color:inherit;">
+            <h1>CASA SASA</h1>
+            <div data-i18n="header.subtitle" style="font-family:Georgia,serif;font-style:italic;font-size:15px;color:#bfe0cc;margin-top:8px">an apartment in the heart of the Italian Alps</div>
+          </a>
+        </div>
+        <div class="header-actions"></div>
+      </div>
+      <div class="tricolore">
+        <div class="tricolore-green"></div>
+        <div class="tricolore-white"></div>
+        <div class="tricolore-red"></div>
       </div>
       <nav id="navigation">
         <script type="module" src="/src/main.js"></script>
       </nav>
       <div id="content-container">
         <section id="welcome-box">
-          <h2>Welcome to Casa Sasa</h2>
+          <h2 data-i18n="home.title">Welcome</h2>
+          <hr class="section-divider">
+          <p data-i18n="home.description" style="margin:0 0 12px;font-size:15px;line-height:1.6">Welcome to our apartment in the heart of the Italian Alps, in the picturesque village of Moggio Udinese. The apartment comfortably sleeps 5 people and offers tranquility and stunning views of the surrounding mountains.</p>
         </section>
-        <section class="features-grid"> 
+        <section class="features-grid">
           <section class="box">
-            <h3>House features</h3>
+            <h3 data-i18n="home.houseFeatures">House features</h3>
               <ul>
-                <li>1 bedroom, 2 sofas</li>
-                <li>Bathroom in progress</li>
-                <li>Sort of equipped kitchen</li>
-                <li>Large garden with pool (I wish!)
+                <li data-i18n="home.features.bedroom">1 bedroom, 2 sofas</li>
+                <li data-i18n="home.features.bathroom">Bathroom in progress</li>
+                <li data-i18n="home.features.kitchen">Sort of equipped kitchen</li>
+                <li data-i18n="home.features.garden">Large garden with pool (I wish!)
                 </li>
               </ul>
           </section>
           <section class="box">
-            <h3>Location</h3>
+            <h3 data-i18n="home.location">Location</h3>
               <ul>
                 <li><a href="https://mapy.com/s/bezujufuje" target="_blank">Moggio di Sotto, Italy</a></li>
               </ul>
