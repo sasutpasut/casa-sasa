@@ -131,9 +131,9 @@ export const translations = {
         gallery: {
             title: "Photo Gallery",
             subtitle: "Photos of the apartment and surroundings",
-            uploadTitle: "Upload a New Photo",
-            uploadLabel: "Select Image:",
-            uploadButton: "Upload Photo"
+            uploadTitle: "Upload Photos",
+            uploadLabel: "Select Images (up to 10):",
+            uploadButton: "Upload Photos"
         },
         bucketListForm: {
             addTitle: "Add Bucket List Item",
@@ -295,9 +295,9 @@ export const translations = {
         gallery: {
             title: "Fotogalerie",
             subtitle: "Fotografie apartmánu a okolí",
-            uploadTitle: "Nahrát novou fotografii",
-            uploadLabel: "Vyberte obrázek:",
-            uploadButton: "Nahrát fotografii"
+            uploadTitle: "Nahrát fotografie",
+            uploadLabel: "Vyberte obrázky (max 10):",
+            uploadButton: "Nahrát fotografie"
         },
         bucketListForm: {
             addTitle: "Přidat položku do seznamu",

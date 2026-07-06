@@ -35,28 +35,64 @@ export async function initGallery() {
         uploadForm.onsubmit = async (event) => {
             event.preventDefault();
             const fileInput = document.getElementById('file-input');
-            if(!fileInput.files[0]) return;
+            const files = fileInput.files;
 
-            const formData = new FormData();
-            formData.append('image', fileInput.files[0]);
+            if(files.length === 0) return;
 
-            try {
-                const response = await fetch(`${API_URL}/api/upload`, {
-                    method: 'POST',
-                    body: formData,
-                    credentials: 'include'
-                });
-                if(response.ok) {
-                    alert('Image uploaded successfully!');
-                    fileInput.value = '';
-                    fetchImages(container);
-                } else {
-                    alert('Failed to upload image. Please try again.');
-                }
-            } catch (error) {
-                console.error('Error uploading image:', error);
-                alert('An error occurred while uploading the image');
+            // Limit to 10 files
+            if(files.length > 10) {
+                alert('You can only upload up to 10 images at once.');
+                return;
             }
+
+            const uploadButton = uploadForm.querySelector('button[type="submit"]');
+            uploadButton.disabled = true;
+            uploadButton.textContent = `Uploading ${files.length} photo${files.length > 1 ? 's' : ''}...`;
+
+            let successCount = 0;
+            let failCount = 0;
+
+            // Upload files one by one
+            for (let i = 0; i < files.length; i++) {
+                const formData = new FormData();
+                formData.append('image', files[i]);
+
+                try {
+                    const response = await fetch(`${API_URL}/api/upload`, {
+                        method: 'POST',
+                        body: formData,
+                        credentials: 'include'
+                    });
+
+                    if(response.ok) {
+                        successCount++;
+                    } else {
+                        failCount++;
+                    }
+                } catch (error) {
+                    console.error('Error uploading image:', error);
+                    failCount++;
+                }
+
+                // Update button text with progress
+                uploadButton.textContent = `Uploading ${i + 1}/${files.length}...`;
+            }
+
+            // Reset button
+            uploadButton.disabled = false;
+            uploadButton.textContent = 'Upload Photos';
+
+            // Show results
+            if (successCount > 0 && failCount === 0) {
+                alert(`Successfully uploaded ${successCount} photo${successCount > 1 ? 's' : ''}!`);
+            } else if (successCount > 0 && failCount > 0) {
+                alert(`Uploaded ${successCount} photo${successCount > 1 ? 's' : ''}, ${failCount} failed.`);
+            } else {
+                alert('Failed to upload photos. Please try again.');
+            }
+
+            fileInput.value = '';
+            fetchImages(container);
         }
     }
 }
