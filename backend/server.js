@@ -258,7 +258,8 @@ app.get('/api/images', (req, res) => {
         }
 
         const validImages = files.filter(file => file !== '.gitkeep');
-        const imageUrls = validImages.map(file => `http://localhost:3000/uploads/${file}`);
+        // Return relative URLs so they work in both dev and production
+        const imageUrls = validImages.map(file => `/uploads/${file}`);
         res.json(imageUrls);
     });
 });
