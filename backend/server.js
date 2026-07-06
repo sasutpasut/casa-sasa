@@ -52,7 +52,9 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
-app.use(express.json());
+// Increase payload size limits for photo uploads (50MB for JSON, 100MB for files)
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser());
 
 // Initialize SQLite database
@@ -235,7 +237,14 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage });
+// Configure multer with file size limits (100MB per file)
+const upload = multer({
+    storage,
+    limits: {
+        fileSize: 100 * 1024 * 1024, // 100MB max per file
+        files: 10 // max 10 files per upload
+    }
+});
 
 // Upload a new image
 app.post('/api/upload', authenticateToken(), upload.single('image'), (req, res) => {
@@ -657,6 +666,36 @@ app.get('/health', (req, res) => {
             timestamp: new Date().toISOString()
         });
     });
+});
+
+// Error handling middleware for multer/file upload errors
+app.use((err, req, res, next) => {
+    if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+            return res.status(413).json({
+                error: 'Images are too large. Maximum file size is 100MB per image.',
+                code: 'FILE_TOO_LARGE'
+            });
+        }
+        if (err.code === 'LIMIT_FILE_COUNT') {
+            return res.status(400).json({
+                error: 'Too many files. Maximum 10 images allowed.',
+                code: 'TOO_MANY_FILES'
+            });
+        }
+        return res.status(400).json({ error: err.message });
+    }
+
+    // Handle express.json payload too large
+    if (err.type === 'entity.too.large') {
+        return res.status(413).json({
+            error: 'Request data is too large. Please reduce image sizes.',
+            code: 'PAYLOAD_TOO_LARGE'
+        });
+    }
+
+    // Pass other errors to default handler
+    next(err);
 });
 
 // Start the server

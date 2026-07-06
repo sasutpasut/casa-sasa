@@ -223,11 +223,24 @@ async function setupTripsWorkflow() {
                 } else {
                     const errorData = await response.json().catch(() => ({}));
                     console.error('Server error:', errorData);
-                    alert(`${t('messages.tripSaveFailed')}: ${errorData.error || ''}`);
+
+                    // Show user-friendly error message
+                    let errorMessage = t('messages.tripSaveFailed');
+                    if (errorData.code === 'FILE_TOO_LARGE') {
+                        errorMessage = t('messages.filesTooLarge');
+                    } else if (errorData.code === 'TOO_MANY_FILES') {
+                        errorMessage = t('messages.tooManyFiles');
+                    } else if (errorData.code === 'PAYLOAD_TOO_LARGE') {
+                        errorMessage = t('messages.payloadTooLarge');
+                    } else if (errorData.error) {
+                        errorMessage += ': ' + errorData.error;
+                    }
+
+                    alert(errorMessage);
                 }
             } catch (error) {
                 console.error('Error adding trip:', error);
-                alert('An error occurred while adding the trip. Please check console for details.');
+                alert(t('messages.tripSaveError'));
             }
         };
     }
