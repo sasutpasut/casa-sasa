@@ -32,7 +32,19 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
-    middlewareMode: false
+    middlewareMode: false,
+    proxy: {
+      // Proxy /uploads requests to backend in development
+      '/uploads': {
+        target: 'http://localhost:3000',
+        changeOrigin: true
+      },
+      // Proxy /api requests to backend
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true
+      }
+    }
   },
   build: {
     rollupOptions: {
