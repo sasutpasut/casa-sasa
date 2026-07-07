@@ -4,10 +4,13 @@
   <meta charset="UTF-8"><title>Login - Casa Sasa</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
   <link rel="stylesheet" href="src/style.css">
-  <script>
+  <script type="module">
+    import { updateI18nElements } from './src/language.js';
+
     // Mark login page as auth-verified immediately to show content
     document.addEventListener('DOMContentLoaded', () => {
       document.body.classList.add('auth-verified');
+      updateI18nElements();
     });
   </script>
 </head>
@@ -29,13 +32,13 @@
     </div>
     <div style="background:#ffffff;padding:40px 26px;min-height:300px;">
       <div class="form-container" style="max-width: 400px;margin:0 auto;">
-        <h3>Controllo Accesso</h3>
+        <h3 data-i18n="auth.loginTitle">Access Control</h3>
         <form id="login-form">
           <div class="form-group">
-            <label for="password">Password:</label>
+            <label for="password" data-i18n="auth.passwordLabel">Password:</label>
             <input type="password" id="password" required placeholder="••••••••">
           </div>
-          <button type="submit" class="btn-submit">Accedi</button>
+          <button type="submit" class="btn-submit" data-i18n="auth.loginButton">Login</button>
         </form>
       </div>
     </div>

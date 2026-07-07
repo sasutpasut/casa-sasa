@@ -10,7 +10,10 @@ export const translations = {
         },
         auth: {
             login: "Login",
-            logout: "Logout"
+            logout: "Logout",
+            loginTitle: "Controllo Accesso",
+            passwordLabel: "Password:",
+            loginButton: "Accedi"
         },
         home: {
             title: "Welcome",
@@ -178,7 +181,10 @@ export const translations = {
         },
         auth: {
             login: "Přihlásit",
-            logout: "Odhlásit"
+            logout: "Odhlásit",
+            loginTitle: "Controllo Accesso",
+            passwordLabel: "Password:",
+            loginButton: "Accedi"
         },
         home: {
             title: "Vítejte",
