@@ -17,12 +17,12 @@ export const translations = {
             description: "Welcome to our apartment on the border of Carnic and Julian Alps, in the picturesque village of Moggio Udinese. The apartment comfortably sleeps 5 people and offers tranquility and stunning views of the surrounding mountains.",
             houseFeatures: "House features",
             location: "Location",
-            locationLink: "Moggio di Sotto, Italy",
             imageAlt: "The city of Moggio di Sotto",
+            locationWithLink: "<a href='https://mapy.com/s/cetubocuzu' target='_blank'>Moggio di Sotto, Italy</a>",
             features: {
                 bedroom: "1 bedroom, 2 sofas, accommodates 5 people",
-                bathroom: "Bathroom in progress",
-                kitchen: "Sort of equipped kitchen",
+                bathroom: "Older, but fully functional bathroom, planned to be renovated",
+                kitchen: "Equipped kitchen",
             }
         },
         howToGetHere: {
@@ -32,7 +32,7 @@ export const translations = {
             byTrain: "By Train",
             trainDescription: "The nearest major train station is Villach, Austria. Direct train service here is available from Brno. From Villach, public transport to Moggio is not ideal, but someone already staying there can pick you up by car. Alternatively, you can take a train from Vienna to Tarvisio and then a bus to Moggio (but the bus runs only a few times a day). The optimal connections take about 9 hours.",
             parking: "Parking",
-            parkingBest: "Best option is free parking behind the town hall or around the bus stop",
+            parkingBestWithLink: "Best option is free parking <a href='https://mapy.com/s/dulefulote' target='_blank'>behind the town hall</a> or <a href='https://mapy.com/s/camabureje' target='_blank'>around the bus stop</a>",
             parkingLimited: "There are few spaces on the square in front of the building, but limited to 1 hour maximum",
             parkingGeneral: "Alternatively, you can park anywhere in the side streets as long as you don't block traffic"
         },
@@ -53,7 +53,7 @@ export const translations = {
             boilerSwitch: "Then flip the wall switch next to the boiler to \"Acceso\" position",
             boilerPanel: "Then turn on the boiler using the touch panel",
             noteLabel: "Note:",
-            noteText: "Clean bed linens are available in the cabinet. You can put dirty linens in the basket in the bathroom. Bring your own towels. Down the stairs from the main entrance there is a cellar - you can store your bikes or skis here.",
+            noteText: "Clean bed linens are available in the cabinet. You can put dirty linens in the basket in the bathroom. Bring your own towels. Down the stairs from the main entrance there is a cellar - you can store your bikes or skis here. Trash bins are located behind the town hall or at the bus stop.",
             checkOut: "Check Out",
             checkOutClean: "Please tidy up (vacuum, wipe surfaces if needed, clean the kitchen, etc.)",
             checkOutBlinds: "Lower the shutters",
@@ -185,12 +185,12 @@ export const translations = {
             description: "Vítejte v našem apartmánu na hranici Karnských a Julských Alp, v malebné obci Moggio Udinese. Apartmán pohodlně ubytuje 5 osob a nabízí klid a nádherné výlety do okolních hor.",
             houseFeatures: "Vybavení domu",
             location: "Lokalita",
-            locationLink: "Moggio di Sotto, Itálie",
+            locationWithLink: "<a href='https://mapy.com/s/cetubocuzu' target='_blank'>Moggio di Sotto, Italy</a>",
             imageAlt: "Město Moggio di Sotto",
             features: {
                 bedroom: "1 ložnice, 2 pohovky, 5 lůžek",
-                bathroom: "Koupelna v rekonstrukci",
-                kitchen: "Částečně vybavená kuchyň",
+                bathroom: "Starší, ale plně funkční koupelna, plánovaná rekonstrukce",
+                kitchen: "Vybavená a funkční kuchyň, také před renovací",
             }
         },
         howToGetHere: {
@@ -200,7 +200,7 @@ export const translations = {
             byTrain: "Vlakem",
             trainDescription: "Nejbližší velké vlakové nádraží je ve Villachu v Rakousku. Z Brna jede přímý vlak. Z Villachu už veřejná doprava do Moggia není ideální, ale může vás zde někdo už ubytovaný vyzvednout autem. Alternativně je možné jet vlakem z Vídně do Tarvisia a odtud autobusem do Moggia (ale autobus jezdí jen párkrát denně). Optimálními spoji cesta trvá cca 9 hodin.",
             parking: "Parkování",
-            parkingBest: "Nejlepší možnost je bezplatné parkování za radnicí, nebo kolem autobusové zastávky",
+            parkingBestWithLink: "Nejlepší možnost je bezplatné parkování <a href='https://mapy.com/s/dulefulote' target='_blank'>za radnicí</a>, nebo kolem <a href='https://mapy.com/s/camabureje' target='_blank'>autobusové zastávky</a>",
             parkingLimited: "Několik míst je na náměstí a před budovou apartmánu, ale maximálně na 1 hodinu",
             parkingGeneral: "Alternativně lze parkovat kdekoliv mimo hlavní silnice, pokud neblokujete provoz"
         },
@@ -221,7 +221,7 @@ export const translations = {
             boilerSwitch: "Následně přepněte vypínač na stěně vedle kotle do polohy \"Acceso\"",
             boilerPanel: "Následně zapněte kotel pomocí dotykového panelu",
             noteLabel: "Poznámka:",
-            noteText: "Čisté ložní prádlo je k dispozici ve skříni v chodbě. Použité dejte do koše v koupelně. Ručníky si přivezte vlastní. Dolů po schodech z hlavního vchodu je sklep - můžete zde uložit svoje kola nebo lyže.",
+            noteText: "Čisté ložní prádlo je k dispozici ve skříni v chodbě. Použité dejte do koše v koupelně. Ručníky si přivezte vlastní. Dolů po schodech z hlavního vchodu je sklep - můžete zde uložit svoje kola nebo lyže. Popelnice jsou za radnicí, nebo u autobusové zastávky.",
             checkOut: "Check Out",
             checkOutClean: "Prosím ukliďte (vyluxujte, utřete povrchy pokud je třeba, ukliďte v kuchyni atd.)",
             checkOutBlinds: "Stáhněte rolety",
@@ -399,7 +399,14 @@ export function updateI18nElements() {
     const elements = document.querySelectorAll('[data-i18n]');
     elements.forEach(el => {
         const key = el.getAttribute('data-i18n');
-        el.textContent = t(key);
+        const translation = t(key);
+
+        // Use innerHTML if translation contains HTML tags, otherwise use textContent
+        if (translation.includes('<a ') || translation.includes('<strong>') || translation.includes('<em>')) {
+            el.innerHTML = translation;
+        } else {
+            el.textContent = translation;
+        }
     });
 
     // Update placeholders for inputs with data-i18n-placeholder
@@ -414,5 +421,12 @@ export function updateI18nElements() {
     altElements.forEach(el => {
         const key = el.getAttribute('data-i18n-alt');
         el.alt = t(key);
+    });
+
+    // Update elements with HTML content using data-i18n-html
+    const htmlElements = document.querySelectorAll('[data-i18n-html]');
+    htmlElements.forEach(el => {
+        const key = el.getAttribute('data-i18n-html');
+        el.innerHTML = t(key);
     });
 }
