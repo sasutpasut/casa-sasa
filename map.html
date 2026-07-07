@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Casa Sasa</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
+    <style>
+      /* Inline critical CSS to hide content before auth check */
+      body:not(.auth-verified) { opacity: 0; }
+    </style>
+  </head>
+
+  <body>
+    <div class="main-container">
+      <div class="header">
+        <div class="header-actions"></div>
+        <div class="header-content">
+          <a href="/" style="text-decoration:none;color:inherit;">
+            <h1>CASA SASA</h1>
+          </a>
+        </div>
+        <div class="header-actions"></div>
+      </div>
+      <div class="tricolore">
+        <div class="tricolore-green"></div>
+        <div class="tricolore-white"></div>
+        <div class="tricolore-red"></div>
+      </div>
+      <nav id="navigation">
+        <script type="module" src="/src/main.js"></script>
+      </nav>
+      <div id="content-container">
+        <div style="padding: 22px 26px;">
+          <h1 class="section-header" data-i18n="map.title">Interactive Map</h1>
+          <hr class="section-divider">
+          <p data-i18n="map.subtitle" style="margin:0 0 14px;font-size:14px;font-style:italic;color:#555">Explore points of interest in the area</p>
+
+          <!-- Admin controls -->
+          <button id="add-point-btn" class="btn-submit" data-i18n="map.addButton" style="display:none;width:auto;margin-bottom:16px;">+ Add Point</button>
+        </div>
+
+        <!-- Interactive Map Container -->
+        <div id="map-container" style="position:relative;padding:0 26px 26px;">
+          <img id="map-image" src="/assets/gallery/full_size.jpg" alt="Map" style="width:100%;height:auto;display:block;">
+          <div id="map-points-container"></div>
+
+          <!-- Point tooltip -->
+          <div id="point-tooltip" style="display:none;position:absolute;background:#fff;border:2px solid #0b6b3a;padding:8px 12px;border-radius:4px;box-shadow:3px 3px 8px rgba(0,0,0,0.3);z-index:1000;">
+            <h3 style="margin:0;color:#0b5c34;font-size:14px;font-weight:bold;" id="tooltip-title"></h3>
+            <button id="tooltip-close" style="position:absolute;top:2px;right:4px;background:none;border:none;font-size:18px;cursor:pointer;color:#666;line-height:1;">&times;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add/Edit Point Modal -->
+    <div id="point-modal" class="modal">
+      <div class="modal-trip-content">
+        <span class="close-modal" id="close-point-modal">&times;</span>
+        <div style="padding: 22px 26px;">
+          <h3 data-i18n="map.formTitle" style="font-family:Georgia,serif;color:#0b5c34;font-size:20px;margin:0 0 16px;font-weight:bold;">Add Point to Map</h3>
+
+          <!-- Map preview for clicking -->
+          <div style="margin-bottom:20px;position:relative;">
+            <p data-i18n="map.formInstruction" style="font-size:13px;color:#666;margin-bottom:8px;">Click on the map below to set the point location:</p>
+            <div style="position:relative;border:2px solid #0b6b3a;max-width:600px;">
+              <img id="modal-map-image" src="/assets/gallery/full_size.jpg" alt="Map" style="width:100%;height:auto;display:block;cursor:crosshair;">
+              <div id="modal-temp-marker" style="display:none;position:absolute;width:16px;height:16px;background:#ce2b37;border:2px solid #fff;border-radius:50%;transform:translate(-50%, -50%);pointer-events:none;"></div>
+            </div>
+          </div>
+
+          <form id="point-form">
+            <div class="form-group">
+              <label for="point-title" data-i18n="map.formTitleLabel">Point Title:</label>
+              <input type="text" id="point-title" required />
+            </div>
+            <button type="submit" class="btn-submit" data-i18n="map.formSubmit">Save Point</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/map-logic.js"></script>
+  </body>
+</html>

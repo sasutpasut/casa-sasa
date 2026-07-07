@@ -118,6 +118,18 @@ db.serialize(() => {
         )
     `);
 
+    // Create map points table
+    db.run(`
+        CREATE TABLE IF NOT EXISTS map_points (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        x_percent REAL NOT NULL,
+        y_percent REAL NOT NULL,
+        title TEXT NOT NULL,
+        description TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
+
     // Create bucket list table
     db.run(`
         CREATE TABLE IF NOT EXISTS bucket_list (
@@ -745,6 +757,71 @@ app.use((err, req, res, next) => {
 
     // Pass other errors to default handler
     next(err);
+});
+
+// ===== MAP POINTS ENDPOINTS =====
+
+// Get all map points
+app.get('/api/map-points', (req, res) => {
+    db.all('SELECT * FROM map_points ORDER BY created_at DESC', [], (err, rows) => {
+        if (err) {
+            console.error('Error fetching map points:', err);
+            return res.status(500).json({ error: 'Failed to fetch map points' });
+        }
+        res.json(rows);
+    });
+});
+
+// Add a new map point (admin only)
+app.post('/api/map-points', authenticateToken('admin'), (req, res) => {
+    const { x_percent, y_percent, title, description } = req.body;
+
+    if (!x_percent || !y_percent || !title) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    db.run(
+        'INSERT INTO map_points (x_percent, y_percent, title, description) VALUES (?, ?, ?, ?)',
+        [x_percent, y_percent, title, description],
+        function(err) {
+            if (err) {
+                console.error('Error adding map point:', err);
+                return res.status(500).json({ error: 'Failed to add map point' });
+            }
+            res.json({ id: this.lastID, message: 'Map point added successfully' });
+        }
+    );
+});
+
+// Update a map point (admin only)
+app.put('/api/map-points/:id', authenticateToken('admin'), (req, res) => {
+    const { id } = req.params;
+    const { x_percent, y_percent, title, description } = req.body;
+
+    db.run(
+        'UPDATE map_points SET x_percent = ?, y_percent = ?, title = ?, description = ? WHERE id = ?',
+        [x_percent, y_percent, title, description, id],
+        function(err) {
+            if (err) {
+                console.error('Error updating map point:', err);
+                return res.status(500).json({ error: 'Failed to update map point' });
+            }
+            res.json({ message: 'Map point updated successfully' });
+        }
+    );
+});
+
+// Delete a map point (admin only)
+app.delete('/api/map-points/:id', authenticateToken('admin'), (req, res) => {
+    const { id } = req.params;
+
+    db.run('DELETE FROM map_points WHERE id = ?', [id], function(err) {
+        if (err) {
+            console.error('Error deleting map point:', err);
+            return res.status(500).json({ error: 'Failed to delete map point' });
+        }
+        res.json({ message: 'Map point deleted successfully' });
+    });
 });
 
 // Start the server

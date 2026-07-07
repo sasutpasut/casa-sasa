@@ -6,7 +6,8 @@ export const translations = {
             howToGetHere: "How to get here",
             instructions: "Instructions",
             tripsAndTips: "Trips & Tips",
-            gallery: "Gallery"
+            gallery: "Gallery",
+            map: "Map"
         },
         auth: {
             login: "Login",
@@ -138,6 +139,25 @@ export const translations = {
             uploadLabel: "Select Images (up to 10):",
             uploadButton: "Upload Photos"
         },
+        map: {
+            title: "Interactive Map",
+            subtitle: "Explore points of interest in the area",
+            addButton: "+ Add Point",
+            formTitle: "Add Point to Map",
+            formTitleLabel: "Point Title:",
+            formDescription: "Description:",
+            formInstruction: "Click on the map to set the point location, then fill in the details above.",
+            formSubmit: "Save Point",
+            pointSet: "Point location set! Now fill in the details and click Save.",
+            clickMapFirst: "Please click on the map to set the point location first!",
+            pointSaved: "Point saved successfully!",
+            saveFailed: "Failed to save point.",
+            saveError: "An error occurred while saving the point.",
+            deleteConfirm: "Delete this point?",
+            pointDeleted: "Point deleted successfully!",
+            deleteFailed: "Failed to delete point.",
+            deleteError: "An error occurred while deleting the point."
+        },
         bucketListForm: {
             addTitle: "Add Bucket List Item",
             editTitle: "Edit Bucket List Item",
@@ -177,7 +197,8 @@ export const translations = {
             howToGetHere: "Jak se sem dostat",
             instructions: "Instrukce",
             tripsAndTips: "Výlety a Tipy",
-            gallery: "Galerie"
+            gallery: "Galerie",
+            map: "Mapa"
         },
         auth: {
             login: "Přihlásit",
@@ -308,6 +329,25 @@ export const translations = {
             uploadTitle: "Nahrát fotografie",
             uploadLabel: "Vyberte obrázky (max 10):",
             uploadButton: "Nahrát fotografie"
+        },
+        map: {
+            title: "Interaktivní Mapa",
+            subtitle: "Prozkoumejte zajímavá místa v okolí",
+            addButton: "+ Přidat Bod",
+            formTitle: "Přidat Bod na Mapu",
+            formTitleLabel: "Název bodu:",
+            formDescription: "Popis:",
+            formInstruction: "Klikněte na mapu pro nastavení polohy bodu, poté vyplňte údaje výše.",
+            formSubmit: "Uložit Bod",
+            pointSet: "Poloha bodu nastavena! Nyní vyplňte údaje a klikněte na Uložit.",
+            clickMapFirst: "Prosím nejprve klikněte na mapu pro nastavení polohy bodu!",
+            pointSaved: "Bod byl úspěšně uložen!",
+            saveFailed: "Nepodařilo se uložit bod.",
+            saveError: "Při ukládání bodu došlo k chybě.",
+            deleteConfirm: "Smazat tento bod?",
+            pointDeleted: "Bod byl úspěšně smazán!",
+            deleteFailed: "Nepodařilo se smazat bod.",
+            deleteError: "Při mazání bodu došlo k chybě."
         },
         bucketListForm: {
             addTitle: "Přidat položku do seznamu",

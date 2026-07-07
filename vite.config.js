@@ -13,6 +13,7 @@ function cleanUrlsPlugin() {
           '/how-to-get-here': '/how-to-get-here.html',
           '/instructions': '/instructions.html',
           '/trips': '/trips.html',
+          '/map': '/map.html',
           '/gallery': '/gallery.html',
           '/login': '/login.html'
         }
@@ -54,6 +55,7 @@ export default defineConfig({
         'instructions': resolve(__dirname, 'instructions.html'),
         'how-to-get-here': resolve(__dirname, 'how-to-get-here.html'),
         'trips': resolve(__dirname, 'trips.html'),
+        'map': resolve(__dirname, 'map.html'),
         'login': resolve(__dirname, 'login.html')
       }
     }
