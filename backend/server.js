@@ -6,6 +6,7 @@ const fs = require('fs');
 require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const convert = require('heic-convert');
 
 // 1. INITIALIZE EXPRESS APP FIRST (Fixes the crash)
 const app = express();
@@ -246,8 +247,56 @@ const upload = multer({
     }
 });
 
+// Middleware to convert HEIC to JPEG
+async function convertHeicToJpeg(req, res, next) {
+    if (!req.file && !req.files) {
+        return next();
+    }
+
+    const filesToConvert = req.files || [req.file];
+
+    try {
+        for (const file of filesToConvert) {
+            if (!file) continue;
+
+            const ext = path.extname(file.originalname).toLowerCase();
+            if (ext === '.heic' || ext === '.heif') {
+                console.log(`Converting HEIC file: ${file.filename}`);
+
+                // Read HEIC file
+                const inputBuffer = await fs.promises.readFile(file.path);
+
+                // Convert to JPEG
+                const outputBuffer = await convert({
+                    buffer: inputBuffer,
+                    format: 'JPEG',
+                    quality: 0.9
+                });
+
+                // Replace HEIC file with JPEG
+                const newFilename = file.filename.replace(/\.heic$/i, '.jpg').replace(/\.heif$/i, '.jpg');
+                const newPath = path.join(path.dirname(file.path), newFilename);
+
+                await fs.promises.writeFile(newPath, outputBuffer);
+                await fs.promises.unlink(file.path); // Delete original HEIC
+
+                // Update file object
+                file.filename = newFilename;
+                file.path = newPath;
+                file.mimetype = 'image/jpeg';
+
+                console.log(`Converted to: ${newFilename}`);
+            }
+        }
+        next();
+    } catch (error) {
+        console.error('HEIC conversion error:', error);
+        return res.status(500).json({ error: 'Failed to process HEIC image. Please try converting to JPEG first.' });
+    }
+}
+
 // Upload a new image
-app.post('/api/upload', authenticateToken(), upload.single('image'), (req, res) => {
+app.post('/api/upload', authenticateToken(), upload.single('image'), convertHeicToJpeg, (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded' });
     }
@@ -393,7 +442,7 @@ app.get('/api/trips/:id/my-rating', (req, res) => {
 });
 
 // Add a new trip
-app.post('/api/trips', authenticateToken(), upload.array('photos', 10), (req, res) => {
+app.post('/api/trips', authenticateToken(), upload.array('photos', 10), convertHeicToJpeg, (req, res) => {
     console.log('POST /api/trips - Request received');
     console.log('User:', req.user);
     console.log('Body:', req.body);
