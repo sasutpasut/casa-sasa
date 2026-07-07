@@ -256,7 +256,7 @@ export const translations = {
             checkOutBoiler: "Vypněte kotel:",
             checkOutBoilerSteps: "Vypněte pomocí dotykového panelu na kotli, počkejte asi 2 minuty, následně přepněte nástěnný vypínač do opačné polohy",
             checkOutGas: "Zavřete plynové ventily (jak ventil troubky, tak ventil kotle)",
-            checkOutElectricity: "Vypněte elektrický vypínač v apartmánu a hlavní vypínač v chodbě",
+            checkOutElectricity: "Vypněte pojistky v apartmánu a hlavní jistič v chodbě",
             checkOutWater: "Zavřete hlavní uzávěr vody",
             amenities: "Vybavení a poznámky",
             amenitiesWifi: "Wifi není k dispozici. Na parapetech je mobilní signál, dostatečný pro práci, sledování seriálů a tak dále",
